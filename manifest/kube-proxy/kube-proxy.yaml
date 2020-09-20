@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: kube-system
+  name: kube-proxy
+  labels:
+    app: kube-proxy
+data:
+  config.conf: |-
+    apiVersion: kubeproxy.config.k8s.io/v1alpha1
+    kind: KubeProxyConfiguration
+    bindAddress: 0.0.0.0
+    healthzBindAddress: 0.0.0.0:10256
+    metricsBindAddress: 127.0.0.1:10249
+    enableProfiling: false
+    clusterCIDR: 10.219.0.0/18
+    clientConnection:
+      burst: 10
+      contentType: application/vnd.kubernetes.protobuf
+      kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
+      qps: 5
+    ipvs:
+      syncPeriod: 30s
+      minSyncPeriod: 0s
+      scheduler: "sh"
+      strictARP: false
+    mode: "ipvs"
+    udpIdleTimeout: 250ms
+    conntrack:
+      maxPerCore: 32768
+      min: 131072
+      tcpCloseWaitTimeout: 1h0m0s
+      tcpEstablishedTimeout: 24h0m0s
+    configSyncPeriod: 15m0s
+    winkernel:
+      enableDSR: false
+  kubeconfig.conf: |-
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - cluster:
+        certificate-authority: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        server: https://10.146.249.240:6443
+      name: default
+    contexts:
+    - context:
+        cluster: default
+        namespace: default
+        user: default
+      name: default
+    current-context: default
+    users:
+    - name: default
+      user:
+        tokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  namespace: kube-system
+  name: kube-proxy
+  labels:
+    k8s-app: kube-proxy
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: kube-proxy
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-proxy
+    spec:
+      containers:
+      - name: kube-proxy
+        command:
+        - /usr/local/bin/kube-proxy
+        - --config=/var/lib/kube-proxy/config.conf
+        - --hostname-override=$(NODE_NAME)
+        - --logtostderr=true
+        - --v=4
+        image: gcr.io/google_containers/kube-proxy:v1.15.3
+        imagePullPolicy: Always
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/kube-proxy
+          name: kube-proxy
+        - mountPath: /run/xtables.lock
+          name: xtables-lock
+        - mountPath: /lib/modules
+          name: lib-modules
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      schedulerName: default-scheduler
+      priorityClassName: system-node-critical
+      serviceAccount: kube-proxy
+      serviceAccountName: kube-proxy
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: kube-proxy
+        name: kube-proxy
+      - hostPath:
+          path: /run/xtables.lock
+          type: FileOrCreate
+        name: xtables-lock
+      - hostPath:
+          path: /lib/modules
+          type: ""
+        name: lib-modules
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/kube-proxy
+                    operator: Exists
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - operator: Exists
+  templateGeneration: 1
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate

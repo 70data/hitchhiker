@@ -1,0 +1,28 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 10.16.29.16
+  bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.16.8
+clusterName: kubernetes
+certificatesDir: /etc/kubernetes/pki
+imageRepository: k8s.gcr.io
+etcd:
+  local:
+    dataDir: /var/lib/etcd
+apiServer:
+  extraArgs:
+    authorization-mode: Node,RBAC
+  timeoutForControlPlane: 4m0s
+networking:
+  podSubnet: 10.217.0.0/16
+  serviceSubnet: 10.96.0.0/12
+  dnsDomain: cluster.local
+dns:
+  type: CoreDNS
