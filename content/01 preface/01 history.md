@@ -302,5 +302,9 @@ Docker 镜像的本质是一个压缩包。
 
 Docker 镜像仓库又解决了软件的分发。
 
+## 虚拟机 vs 容器
+
+![images](http://70data.net/upload/kubernetes/9f973d5d0faab7c6361b2b67800d0e59.jpg)
+
 ![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201102120418.png)
 

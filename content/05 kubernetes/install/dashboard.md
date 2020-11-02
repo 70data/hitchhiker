@@ -20,3 +20,4 @@ kubectl -n kube-system get secret `kubectl -n kube-system get secret | grep admi
 ```
 
 通过 `node:8443` 访问。
+

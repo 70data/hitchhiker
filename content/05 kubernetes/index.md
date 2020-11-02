@@ -71,3 +71,4 @@ CRI 接口包括 RuntimeService 和 ImageService 两个服务。
 这两个服务可以在一个 gRPC server 中实现，也可以分开成两个独立服务。
 
 ![images](http://70data.net/upload/kubernetes/TLsA6HibU3k6Mtew.webp)
+

@@ -13,7 +13,7 @@ ipcmk -S 10
 ```
 ipcs -s
 --------- 信号量数组 -----------
-键        semid      拥有者  权限     nsems
+键         semid      拥有者      权限        nsems
 0x19e9079a 0          root       644        10
 ```
 
@@ -24,7 +24,7 @@ ipcrm -s 0
 
 ipcs -s
 --------- 信号量数组 -----------
-键        semid      拥有者  权限     nsems
+键         semid      拥有者      权限        nsems
 ```
 
 ## unshare & nsenter
@@ -55,7 +55,7 @@ ipcmk -S 10
 
 ipcs -s
 --------- 信号量数组 -----------
-键        semid      拥有者  权限     nsems
+键         semid      拥有者      权限        nsems
 0xafcc1fc6 32768      root       644        10
 ```
 
@@ -64,7 +64,7 @@ shell2
 ```
 ipcs -s
 --------- 信号量数组 -----------
-键        semid      拥有者  权限     nsems
+键         semid      拥有者      权限        nsems
 ```
 
 shell1
@@ -84,9 +84,10 @@ echo $$
 
 ipcs -s
 --------- 信号量数组 -----------
-键        semid      拥有者  权限     nsems
+键         semid      拥有者      权限        nsems
 0xafcc1fc6 32768      root       644        10
 
 readlink /proc/$$/ns/ipc
 ipc:[4026531839]
 ```
+

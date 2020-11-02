@@ -191,4 +191,3 @@ func (ds *dockerService) RunPodSandbox(ctx context.Context, r *runtimeapi.RunPod
 
 使用主机的 PID 命名空间 `spec.hostPID: true`，默认为 false。
 
-## HugePages

@@ -48,3 +48,4 @@ docker rmi --force `docker images | grep name | awk '{print $3}'`
 ```
 nsenter --target `docker inspect --format '{{.State.Pid}}' containerid` --mount --uts --ipc --net --pid
 ```
+

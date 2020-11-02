@@ -15,7 +15,7 @@ UTS namespace 用来隔离系统的 hostname 以及 NIS domain name。
 // 设置子进程的堆栈大小为 1M
 #define STACK_SIZE (1024 * 1024)
 
-#define errExit(msg)    do { perror(msg); exit(EXIT_FAILURE); } while (0)
+#define errExit(msg) do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 // 调用 clone 时执行的函数
 static int childFunc(void *arg)
@@ -33,7 +33,7 @@ static int childFunc(void *arg)
     printf("My parent PID is: %d\n", getppid());
     // 获取系统的默认 shell
     shellname = getenv("SHELL");
-    if(!shellname){
+    if (!shellname) {
         shellname = (char *)"/bin/sh";
     }
     // 在子进程中执行 shell
@@ -44,7 +44,7 @@ static int childFunc(void *arg)
 int main(int argc, char *argv[])
 {
     char *stack;
-    char *stackTop;        
+    char *stackTop;
     pid_t pid;
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <child-hostname>\n", argv[0]);
@@ -140,3 +140,4 @@ uts:[4026532159]
 readlink /proc/$$/ns/uts
 uts:[4026532159]
 ```
+

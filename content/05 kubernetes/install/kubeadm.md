@@ -165,3 +165,4 @@ ipvsadm --clear
 
 1. https://stackoverflow.com/questions/52823871/unable-to-join-the-worker-node-to-k8-master-node
 2. `[kubelet-check] Initial timeout of 40s passed.` 使用 `journalctl -xeu kubelet` 排查
+

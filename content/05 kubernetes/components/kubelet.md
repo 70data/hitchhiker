@@ -310,3 +310,4 @@ OOM killer 会杀掉 oom_score_adj 值最高的容器。
 Container Runtime Interface（CRI）是 Kubernetes v1.5 引入的容器运行时接口，它将 kubelet 与容器运行时解耦，将原来完全面向 Pod 级别的内部接口拆分成面向 Sandbox 和 Container 的 gRPC 接口，并将镜像管理和容器管理分离到不同的服务。
 
 ![images](http://70data.net/upload/kubernetes/assets_-LDAOok5ngY4pc1lEDes_-LpOIkR-zouVcB8QsFj__-LpOIpbX7mEF1NuiAHRv_cri.png)
+

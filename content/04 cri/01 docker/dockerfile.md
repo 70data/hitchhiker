@@ -43,3 +43,4 @@ ADD 额外支持：
 CMD 单独使用时，用来指定容器启动时默认执行的命令。
 ENTRYPOINT 单独使用时，可以完全取代 CMD。ENTRYPOINT 和 CMD 一起使用时，CMD 变成 ENTRYPOINT 的默认参数。
 推荐使用 ENTRYPOINT/CMD 的 exec 书写形式，即 `ENTRYPOINT ["entry.app", "arg"]`，因为 shell 书写形式 `ENTRYPOINT entry.app arg` 会额外启动 shell 进程。
+

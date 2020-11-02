@@ -23,6 +23,8 @@ control group 树上的子节点 control group 是父节点 control group 的后
 一个子系统就是一个资源控制器。cpu 子系统就是控制 CPU 时间分配的一个控制器。
 子系统必须附加(attach)到一个层级上才能起作用，一个子系统附加到某个层级以后，这个层级上的所有 control group 都受到这个子系统的控制。
 
+![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201102221242.png)
+
 ### 相互关系
 
 每次在系统中创建新层级时，该系统中的所有任务都是那个层级的默认 cgroup 的初始成员。
@@ -45,6 +47,19 @@ control group 树上的子节点 control group 是父节点 control group 的后
 可根据需要将该子任务移动到不同的 cgroup 中，但开始时它总是继承其父任务的 cgroup。
 
 ![images](http://70data.net/upload/kubernetes/RMG-rule4.png)
+
+### cgroup 层级
+
+P 代表一个进程。
+每一个进程的描述符中有一个指针指向了一个辅助数据结构 css_set(cgroups subsystem set)。
+指向某一个 css_set 的进程会被加入到当前 css_set 的进程链表中。
+一个进程只能隶属于一个 css_set。
+一个 css_set 可以包含多个进程，隶属于同一 css_set 的进程受到同一个 css_set 所关联的资源限制。
+
+"M×N Linkage" 说明的是 css_set 通过辅助数据结构可以与 cgroup 节点进行多对多的关联。
+但是 cgroup 的实现不允许 css_set 同时关联同一个 cgroup 层级结构下多个节点。因为 cgroups 对同一种资源不允许有多个限制配置。
+
+![images](http://70data.net/upload/kubernetes/cgroups-logic-graph.png)
 
 ## cgroup 子系统
 
@@ -132,21 +147,3 @@ echo pid > tasks
 
 取消限制，需要 umount 后删除 cgroup 目录下的文件。
 
-## golang 实践
-
-
-
-
-
-
-
-
-
-
-cgroup 的实现方式
-
-![images](http://70data.net/upload/kubernetes/cgroups-source-graph.png)
-
-从逻辑层面看 cgroup 的内核数据结构
-
-![images](http://70data.net/upload/kubernetes/cgroups-logic-graph.png)

@@ -43,3 +43,4 @@ top 是从 `/prof/stats` 目录下获取数据，所以容器不挂载宿主机�
 
 lxcfs 是把宿主机的 `/var/lib/lxcfs/proc/memoinfo` 文件挂载到 Docker 容器的 `/proc/meminfo` 位置。
 容器中进程读取相应文件内容时，lxcfs 的 FUSE 实现会从容器对应的 Cgroup 中读取正确的内存限制。从而使得应用获得正确的资源约束设定。
+

@@ -176,3 +176,4 @@ CapScheduler 会提供一系列的可插拔的过滤函数和优先级函数，�
 2. apply 所有的优先级打分函数进行打分。打分的时候会根据一个请求和 offer 的资源，算 cpu 和 mem 的比例，选取出 dominate 的 resource 进行主要评分。
 3. 选取最优的 offer 进行 bind。
 4. bind 之后不会马上调度，而是会 delay scheduler。在比较繁忙的情况下，一次 offer launch 可以启动多个 tasks，这是对于大规模吞吐的考虑。
+
