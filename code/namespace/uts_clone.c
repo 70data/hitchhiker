@@ -10,7 +10,7 @@
 // 设置子进程的堆栈大小为 1M
 #define STACK_SIZE (1024 * 1024)
 
-#define errExit(msg)    do { perror(msg); exit(EXIT_FAILURE); } while (0)
+#define errExit(msg) do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 // 调用 clone 时执行的函数
 static int childFunc(void *arg)
@@ -28,7 +28,7 @@ static int childFunc(void *arg)
     printf("My parent PID is: %d\n", getppid());
     // 获取系统的默认 shell
     shellname = getenv("SHELL");
-    if(!shellname){
+    if (!shellname) {
         shellname = (char *)"/bin/sh";
     }
     // 在子进程中执行 shell
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Usage: %s <child-hostname>\n", argv[0]);
         exit(EXIT_SUCCESS);
     }
-    // 为子进程分配堆栈空间,大小为 1M
+    // 为子进程分配堆栈空间大小为 1M
     stack = malloc(STACK_SIZE);
     if (stack == NULL)
         errExit("malloc");

@@ -146,4 +146,9 @@ echo pid > tasks
 ```
 
 取消限制，需要 umount 后删除 cgroup 目录下的文件。
+也可以直接删除。
+
+```
+rmdir js
+```
 

@@ -1,6 +1,6 @@
 UTS namespace 用来隔离系统的 hostname 以及 NIS domain name。
 
-## 通过 clone 函数创建 UTS 隔离的子进程
+通过 `clone()` 函数创建 UTS 隔离的子进程
 
 ```
 #define _GNU_SOURCE
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Usage: %s <child-hostname>\n", argv[0]);
         exit(EXIT_SUCCESS);
     }
-    // 为子进程分配堆栈空间,大小为 1M
+    // 为子进程分配堆栈空间大小为 1M
     stack = malloc(STACK_SIZE);
     if (stack == NULL)
         errExit("malloc");
@@ -71,22 +71,22 @@ int main(int argc, char *argv[])
 编译
 
 ```
-gcc -o uts_clone_demo uts_clone.c
+gcc -o uts_clone uts_clone.c
 ```
 
 运行
 
 ```
-./uts_clone_demo myhost
-uts.nodename in child:  myhost
-My PID is: 27711
-My parent PID is: 27710
+# ./uts_clone hostname.clone
+uts.nodename in child:  hostname.clone
+My PID is: 30671
+My parent PID is: 30670
 
-hostname
-myhost
+# hostname
+hostname.clone
 ```
 
-## 把当前进程加入到已存在的 UTS namespace
+通过 `setns()` 把当前进程加入到已存在的 UTS namespace
 
 ```
 #define _GNU_SOURCE
@@ -121,23 +121,23 @@ int main(int argc, char *argv[])
 编译
 
 ```
-gcc -o uts_setns_demo uts_setns.c
+gcc -o uts_setns uts_setns.c
 ```
 
 运行
 
 ```
-./uts_clone_demo myhost
-uts.nodename in child:  myhost
-My PID is: 27711
-My parent PID is: 27710
+# ./uts_clone hostname.clone
+uts.nodename in child:  hostname.clone
+My PID is: 30671
+My parent PID is: 30670
 
-readlink /proc/27871/ns/uts
-uts:[4026532159]
+readlink /proc/30671/ns/uts
+uts:[4026532237]
 
-./uts_setns_demo /proc/27871/ns/uts ${SHELL}
+# ./uts_setns /proc/30671/ns/uts ${SHELL}
 
-readlink /proc/$$/ns/uts
-uts:[4026532159]
+# readlink /proc/$$/ns/uts
+uts:[4026532237]
 ```
 
