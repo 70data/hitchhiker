@@ -144,3 +144,4 @@ spec:
         - name: tmp-volume
           emptyDir: {}
       serviceAccountName: kubernetes-dashboard
+
