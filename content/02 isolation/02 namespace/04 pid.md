@@ -2,7 +2,7 @@ PID namespace 用来隔离进程的 PID 空间，可以让不同 PID namespace �
 
 ![images](http://70data.net/upload/kubernetes/286774-a736076226eb26ab.png)
 
-Linux 下的每个进程都有一个对应的 `/proc/PID` 目录，该目录包含了大量的有关当前进程的信息。
+Linux 下的每个进程都有一个对应的 `/proc/pid` 目录，该目录包含了大量的有关当前进程的信息。
 对一个 PID namespace 而言，`/proc` 目录只包含当前 namespace 和它所有子 namespace 里的进程的信息。
 
 创建一个新的 PID namespace 后，如果想让子进程中的 top、ps 等依赖 `/proc` 文件系统的命令能正常工作，还需要挂载 `/proc` 文件系统。
@@ -54,3 +54,4 @@ PID namespace 最多可以嵌套 32 层，由内核中的宏 `MAX_PID_NS_LEVEL` 
 ## 进程间通信
 
 https://kubernetes.io/zh/docs/tasks/configure-pod-container/share-process-namespace/
+

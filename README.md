@@ -1,17 +1,22 @@
 # hitchhiker-container
 - 第一天
-    - 虚拟机、容器历史
-    - cgroup
-    - namespace
+    - [x] 虚拟机、容器历史
+    - [x] namespace
+    - [x] cgroup
     - docker
-        - 安装 & 配置
-        - 基础命令操作
-        - dockerfile & image & 多阶段构建 & image registry
-        - 网络模式
+        - [ ] 安装
+        - [ ] 配置
+        - [ ] 基础操作
+        - [ ] docker image & dockerfile 
+            - [ ] image registry
+            - [ ] 多阶段构建
+        - [ ] 网络模式
 - 第二天
     - docker
-        - 容器启动流程
-        - docker compose
+        - [ ] 容器启动流程
+        - [ ] docker debug
+        - [ ] docker compose
+    - [ ] gocker
     - kubernetes
         - 基础知识
             - 组件

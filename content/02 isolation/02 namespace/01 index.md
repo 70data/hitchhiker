@@ -13,7 +13,7 @@ Linux namespace 将全局系统资源封装在一个抽象中，从而使 namesp
 
 ## proc
 
-每个进程都有一个 `/proc/PID/ns` 目录，其下面的文件依次表示每个 namespace。
+每个进程都有一个 `/proc/pid/ns` 目录，其下面的文件依次表示每个 namespace。
 
 查看当前进程所属的 namespace 信息
 

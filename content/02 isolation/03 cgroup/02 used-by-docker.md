@@ -11,7 +11,7 @@ systemd 本身提供了一个 cgroup 管理方式，所有的写 cgroup 操作�
 - net_cls
 - net_prio
 - device，控制在容器中看到的 device 设备。
-- freezer，停止容器时，freezer 会把当前的进程全部都写入 cgroup，然后把所有的进程都冻结掉。防止停止的时候有进程会去做 fork，相当于防止进程逃逸到宿主机上。
+- freezer，停止容器时，freezer 会把当前的进程全部都写入 cgroup，然后把所有的进程都冻结掉。防止停止的时候有进程会去做 `fork()`，相当于防止进程逃逸到宿主机上。
 - hugetlb
 - perf_evet
 - rdma
