@@ -23,6 +23,8 @@
             - 生态与周边
         - 集群环境搭建
             - kubeadm
+                - check流程
+                - 证书年限
         - 容器编排与应用负载管理
             - pod
             - replicaset & replication controller & deployment
@@ -48,6 +50,7 @@
             - volume & pv & pvc & storageclass
             - emptydir
             - hostpath
+                - hostpath-provisioner
             - nfs
 - 第五天
     - kubernetes
@@ -118,6 +121,7 @@
         - elasticsearch
         - kibana
 - 第十天
+    - etcd
     - envoy
         - 微服务及服务⽹格基础
         - envoy基础
@@ -130,3 +134,4 @@
         - istio部署
         - 基于istio的服务部署
         - istio流量治理
+
