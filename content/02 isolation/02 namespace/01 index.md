@@ -17,8 +17,8 @@ Linux namespace 将全局系统资源封装在一个抽象中，从而使 namesp
 
 查看当前进程所属的 namespace 信息
 
-```
-# ll /proc/$$/ns
+```shell script
+ll /proc/$$/ns
 total 0
 lrwxrwxrwx 1 root root 0 Nov  3 11:50 cgroup -> cgroup:[4026531835]
 lrwxrwxrwx 1 root root 0 Nov  3 11:50 ipc -> ipc:[4026531839]
@@ -37,8 +37,8 @@ lrwxrwxrwx 1 root root 0 Nov  3 11:50 uts -> uts:[4026531838]
 如果两个进程指向的 namespace inode number 相同，就说明他们在同一个 namespace 下，否则就在不同的 namespace 下。
 这些符号链接指向的文件比较特殊，不能直接访问，事实上指向的文件存放在被称为 nsfs 的文件系统中，该文件系统用户不可见。可以使用系统调用 stat() 在返回的结构体的 st_ino 字段中获取 inode number，shell 命令也可以查看。
 
-```
-#  stat -L /proc/$$/ns/net
+```shell script
+stat -L /proc/$$/ns/net
   File: ‘/proc/1244/ns/net’
   Size: 0         	Blocks: 0          IO Block: 4096   regular empty file
 Device: 4h/4d	Inode: 4026531992  Links: 1
@@ -60,7 +60,7 @@ Linux 提供的 namespace 操作 API 有 `clone()`、`setns()`、`unshare()`。
 
 创建一个新的进程。
 
-```
+```shell script
 int clone(int (*child_func)(void *), void *child_stack, int flags, void *arg);
 ```
 
@@ -79,7 +79,7 @@ int clone(int (*child_func)(void *), void *child_stack, int flags, void *arg);
 
 将调用的进程与特定类型 namespace 的一个实例分离，并将该进程与该类型 namespace 的另一个实例重新关联。
 
-```
+```shell script
 int setns(int fd, int nstype);
 ```
 
@@ -90,7 +90,7 @@ int setns(int fd, int nstype);
 util-linux 包里提供了 nsenter 命令，其提供了一种方式将新创建的进程运行在指定的 namespace 里面。
 通过命令行(-t 参数)指定要进入的 namespace 的符号链接，然后利用 `setns()` 将当前的进程放到指定的 namespace 里面，再调用 `clone()` 运行指定的执行文件。
 
-```
+```shell script
 # 通过 nsenter 的方式进入 docker
 nsenter --target $pid --mount --uts --ipc --net --pid
 ```
@@ -99,7 +99,7 @@ nsenter --target $pid --mount --uts --ipc --net --pid
 
 让进程脱离当前 namespace，加入一个新的 namespace。
 
-```
+```shell script
 int unshare(int flags);
 ```
 
@@ -108,40 +108,39 @@ int unshare(int flags);
 
 Linux 自带 unshare 命令。
 
-```
+```shell script
 # 显示当前 shell 的 PID
-# echo $$
+echo $$
 1244
 
 # 显示当前 namespace 中的某个挂载点
-# cat /proc/1244/mounts | grep mq
+cat /proc/1244/mounts | grep mq
 mqueue /dev/mqueue mqueue rw,relatime 0 0
 
 # 显示当前 namespace 的 ID
-# readlink /proc/1244/ns/mnt
+readlink /proc/1244/ns/mnt
 mnt:[4026531840]
 
-在新创建的 mount namespace 中执行新的 shell
-# unshare -m /bin/bash
+# 在新创建的 mount namespace 中执行新的 shell
+unshare -m /bin/bash
 
 # 显示新 namespace 的 ID
-# readlink /proc/$$/ns/mnt
+readlink /proc/$$/ns/mnt
 mnt:[4026532213]
 ```
 
 对比两个 readlink 命令的输出，可以知道两个 shell 处于不同的 mount namespace 中。
 
-```
+```shell script
 # 移除新 namespace 中的挂载点
-# umount /dev/mqueue
-
 # mqueue 是 Linux 的进程间消息队列
+umount /dev/mqueue
 
 # 检查是否生效
-# cat /proc/$$/mounts | grep mq
+cat /proc/$$/mounts | grep mq
 
 # 查看原来的 namespace 中的挂载点是否依然存在
-# cat /proc/1244/mounts | grep mq
+cat /proc/1244/mounts | grep mq
 mqueue /dev/mqueue mqueue rw,relatime 0 0
 ```
 

@@ -7,19 +7,19 @@ Linux 下的每个进程都有一个对应的 `/proc/pid` 目录，该目录包�
 
 创建一个新的 PID namespace 后，如果想让子进程中的 top、ps 等依赖 `/proc` 文件系统的命令能正常工作，还需要挂载 `/proc` 文件系统。
 
-```
-# echo $$
+```shell script
+echo $$
 2326
 
-# readlink /proc/$$/ns/pid
+readlink /proc/$$/ns/pid
 pid:[4026531836]
 
-# unshare --pid --mount --fork /bin/bash
+unshare --pid --mount --fork /bin/bash
 
-# readlink /proc/$$/ns/pid
+readlink /proc/$$/ns/pid
 pid:[4026531836]
 
-# ps
+ps
   PID TTY          TIME CMD
  2217 pts/1    00:00:00 bash
  2326 pts/1    00:00:00 bash
@@ -27,12 +27,12 @@ pid:[4026531836]
  2420 pts/1    00:00:00 bash
  2432 pts/1    00:00:00 ps
 
-# unshare --pid --mount-proc --fork /bin/bash
+unshare --pid --mount-proc --fork /bin/bash
 
-# readlink /proc/$$/ns/pid
+readlink /proc/$$/ns/pid
 pid:[4026532218]
 
-# ps
+ps
   PID TTY          TIME CMD
     1 pts/1    00:00:00 bash
    12 pts/1    00:00:00 ps

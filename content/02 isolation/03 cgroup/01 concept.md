@@ -102,7 +102,7 @@ memory 子系统可以为进程组设定一个 memory 使用上限，一旦进�
 
 创建一个 cgroup。
 
-```
+```shell script
 # cd /sys/fs/cgroup/cpu/
 
 # mkdir js
@@ -111,7 +111,7 @@ memory 子系统可以为进程组设定一个 memory 使用上限，一旦进�
 cgroup 会自动个创建对应的控制文件，这些控制文件存储的值就是对相应的 cgroup 的控制信息。
 可以写控制文件来更改控制信息。
 
-```
+```shell script
 # cd js
 
 # ls
@@ -122,7 +122,7 @@ cgroup.procs           cpuacct.usage  cpuacct.usage_percpu  cpuacct.usage_percpu
 `tasks` 文件包含了所有属于这个 cgroup 的进程的进程号。
 每创建一个层级的时候，系统的所有进程都会自动被加到该层级的根 cgroup 里面。
 
-```
+```shell script
 cat cpu.cfs_quota_us
 -1
 
@@ -132,7 +132,7 @@ cat cpu.cfs_period_us
 
 修改 cgroup 组的 CPU 资源。
 
-```
+```shell script
 echo 10000 > cpu.cfs_quota_us
 ```
 
@@ -141,14 +141,14 @@ echo 10000 > cpu.cfs_quota_us
 
 将进程的 PID 写入 tasks 文件，设置就会对该进程生效。
 
-```
+```shell script
 echo pid > tasks
 ```
 
 取消限制，需要 umount 后删除 cgroup 目录下的文件。
 也可以直接删除。
 
-```
+```shell script
 rmdir js
 ```
 

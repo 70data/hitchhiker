@@ -4,13 +4,13 @@
     - [x] namespace
     - [x] cgroup
     - docker
-        - [ ] 安装
-        - [ ] 配置
-        - [ ] 基础操作
-        - [ ] docker image & dockerfile 
-            - [ ] image registry
-            - [ ] 多阶段构建
+        - [ ] 安装 & 配置
+        - [ ] 容器基础操作
+        - [ ] docker image & registry
+        - [ ] dockerfile & 多阶段构建
+        - [ ] 存储结构
         - [ ] 网络模式
+        - [ ] 基于 wordpress 的小样例
 - 第二天
     - docker
         - [ ] 容器启动流程

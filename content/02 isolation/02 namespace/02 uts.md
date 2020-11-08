@@ -1,8 +1,8 @@
-UTS namespace 用来隔离系统的 hostname 以及 NIS domain name。
+UTS namespace 用来隔离系统的 hostname 以及 domain name。
 
 通过 `clone()` 函数创建 UTS 隔离的子进程
 
-```
+```cgo
 #define _GNU_SOURCE
 #include <sys/wait.h>
 #include <sys/utsname.h>
@@ -70,25 +70,25 @@ int main(int argc, char *argv[])
 
 编译
 
-```
+```shell script
 gcc -o uts_clone uts_clone.c
 ```
 
 运行
 
-```
-# ./uts_clone hostname.clone
+```shell script
+./uts_clone hostname.clone
 uts.nodename in child:  hostname.clone
 My PID is: 30671
 My parent PID is: 30670
 
-# hostname
+hostname
 hostname.clone
 ```
 
 通过 `setns()` 把当前进程加入到已存在的 UTS namespace
 
-```
+```cgo
 #define _GNU_SOURCE
 #include <fcntl.h>
 #include <sched.h>
@@ -120,14 +120,14 @@ int main(int argc, char *argv[])
 
 编译
 
-```
+```shell script
 gcc -o uts_setns uts_setns.c
 ```
 
 运行
 
-```
-# ./uts_clone hostname.clone
+```shell script
+./uts_clone hostname.clone
 uts.nodename in child:  hostname.clone
 My PID is: 30671
 My parent PID is: 30670
@@ -135,9 +135,9 @@ My parent PID is: 30670
 readlink /proc/30671/ns/uts
 uts:[4026532237]
 
-# ./uts_setns /proc/30671/ns/uts ${SHELL}
+./uts_setns /proc/30671/ns/uts ${SHELL}
 
-# readlink /proc/$$/ns/uts
+readlink /proc/$$/ns/uts
 uts:[4026532237]
 ```
 
