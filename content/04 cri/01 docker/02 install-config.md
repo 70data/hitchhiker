@@ -63,18 +63,30 @@ systemctl start docker
 添加 docker 组
 
 ```shell script
-sudo groupadd docker
+groupadd docker
 ```
 
 用户加入 docker 组
 
 ```shell script
-sudo usermod -aG docker ${USER}
+usermod -aG docker ${USER}
 ```
 
 重启 docker 服务
 
 ```shell script
-sudo systemctl restart docker
+systemctl restart docker
+```
+
+```shell script
+docker run hello-world
+```
+
+检查加速器是否生效
+
+```shell script
+docker info
+ Registry Mirrors:
+  https://6shzzc2g.mirror.aliyuncs.com/
 ```
 

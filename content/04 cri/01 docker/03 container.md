@@ -260,12 +260,41 @@ docker system prune -f
 
 ## 与容器交互
 
+在使用 -d 参数时，容器启动后会进入后台。
+
+某些时候需要进入容器进行操作，包括使用 `docker attach` 命令或 `docker exec` 命令
+
+### `docker attach`
+
+```shell script
+docker run -dit centos:7
+eebc6ddf2026bfda38e0bc69860f65da61c3b272b6978983640bbe64e60c058e
+
+docker ps
+CONTAINER ID    IMAGE    COMMAND      CREATED        STATUS        PORTS    NAMES
+eebc6ddf2026    centos:7 "/bin/bash"  3 seconds ago  Up 2 seconds           suspicious_fermat
+
+docker attach eebc6ddf2026
+
+exit
+exit
+
+docker ps
+CONTAINER ID    IMAGE    COMMAND      CREATED        STATUS        PORTS    NAMES
+```
+
+如果从这个 stdin 中 exit，会导致容器的停止。
+
+### `docker exec`
+
 ```shell script
 # 使用 exec 命令在运行状态的容器中，启动一个新进程
 docker exec <options> <ContainerName>/<ContainerID> <app>
 ```
 
-通过 nsenter 的方式
+### `nsenter`
+
+通过 `nsenter` 的方式
 
 ```shell script
 nsenter --target `docker inspect --format '{{.State.Pid}}' containerid` --mount --uts --ipc --net --pid
@@ -293,4 +322,6 @@ docker logs -f
 # 显示容器日志的时间戳
 docker logs -t
 ```
+
+![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201109142121.png)
 
