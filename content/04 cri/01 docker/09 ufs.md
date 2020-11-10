@@ -26,6 +26,8 @@ drwx------  2 root root 4096 Nov  5 19:40 volumes
 
 ## 存储流程
 
+![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201109225048.png)
+
 ![images](http://70data.net/upload/kubernetes/640-3.png)
 
 ![image](https://70data.oss-cn-beijing.aliyuncs.com/note/20201106122832.png)

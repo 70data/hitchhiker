@@ -7,6 +7,8 @@
 
 ![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201109105858.png)
 
+![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201109224933.png)
+
 ## 为什么要用 Docker
 
 ##### 更高效的利用系统资源
