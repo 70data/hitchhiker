@@ -19,11 +19,14 @@ Docker 在创建容器时，先调用控制器创建 sandbox 对象，再调用�
 
 桥接模式，docker run 默认模式。
 
-此模式会为容器分配 Network namespace、设置 IP 等，并将容器网络桥接到一个虚拟网桥 docker0`上，可以和同一宿主机上桥接模式的其他容器进行通信。
+此模式会为容器分配 Network namespace、设置 IP 等，并将容器网络桥接到一个虚拟网桥 docker0 上，可以和同一宿主机上桥接模式的其他容器进行通信。
 
 Docker 会为容器创建独有的 Network namespace，也会为这个命名空间配置好虚拟网卡、路由、DNS、IP 地址、iptables 规则。
 
 ![image](https://70data.oss-cn-beijing.aliyuncs.com/note/20201107222827.png)
+
+当 Docker 启动时，会自动在主机上创建一个 docker0 虚拟网桥。
+实际上是 Linux 的一个 bridge，可以理解为一个软件交换机。它会在挂载到它的网口之间进行转发。
 
 ### 别的 Host 怎么访问该容器
 
@@ -31,6 +34,32 @@ Docker 会为容器创建独有的 Network namespace，也会为这个命名空�
 所以一般直接用端口映射来访问。即：目标容器所在的 Host 主机 IP + 指定端口。然后当报文到达指定目标的 Host 主机时，通过指定端口映射进入容器。
 
 ![image](https://70data.oss-cn-beijing.aliyuncs.com/note/20201107210216.png)
+
+```shell script
+iptables -t nat -nL
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+DOCKER     all  --  0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+DOCKER     all  --  0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+MASQUERADE  all  --  172.18.0.0/16        0.0.0.0/0
+MASQUERADE  all  --  172.17.0.0/16        0.0.0.0/0
+MASQUERADE  tcp  --  172.17.0.2           172.17.0.2           tcp dpt:80
+Chain DOCKER (2 references)
+target     prot opt source               destination
+RETURN     all  --  0.0.0.0/0            0.0.0.0/0
+RETURN     all  --  0.0.0.0/0            0.0.0.0/0
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:8080 to:172.17.0.2:80
+
+docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+4b610f763a21        js-nginx            "/docker-entrypoint.…"   27 hours ago        Up 27 hours         0.0.0.0:8080->80/tcp   nginx
+```
 
 ### 该容器怎么访问别的 Host
 
@@ -278,4 +307,126 @@ Docker 守护程序通过其 MAC 地址将流量路由到容器。
 ## None
 
 不为容器创造任何的网络环境，容器内部就只能使用 loopback`网络设备，不会再有其他的网络资源。
+
+## 容器互联
+
+查看 docker 的网络
+
+```shell script
+docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+27ef241af0da        bridge              bridge              local
+2b0bfe5bf708        host                host                local
+ea93ada1070f        none                null                local
+```
+
+创建一个新的网络，`-d` 是指定网络类型。
+
+```shell script
+docker network create -d bridge my-net
+cef1546fa081db48994e5557ec58c2aca80ca351aa29321bc0f62cb65ce868ee
+
+docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+27ef241af0da        bridge              bridge              local
+2b0bfe5bf708        host                host                local
+cef1546fa081        my-net              bridge              local
+ea93ada1070f        none                null                local
+```
+
+运行容器并连接到新建的 my-net 网络
+
+shell 1
+
+```shell script
+docker run -it --rm --name busybox1 --network my-net busybox sh
+```
+
+shell 2
+
+```shell script
+docker run -it --rm --name busybox2 --network my-net busybox sh
+```
+
+shell 3
+
+```shell script
+docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+a8df5a20ca8c        busybox             "sh"                     52 seconds ago      Up 51 seconds                              busybox2
+ef78cd41a5d2        busybox             "sh"                     2 minutes ago       Up 2 minutes                               busybox1
+
+docker network inspect my-net
+[
+    {
+        "Name": "my-net",
+        "Id": "cef1546fa081db48994e5557ec58c2aca80ca351aa29321bc0f62cb65ce868ee",
+        "Created": "2020-11-10T15:59:20.594267397+08:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.18.0.0/16",
+                    "Gateway": "172.18.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "a8df5a20ca8ce0ddb230302abf16df9a1cfee936380bd837c27293ceafa25e2a": {
+                "Name": "busybox2",
+                "EndpointID": "1e4aecb9c9337b01994554318a74284a8e9ac5b8d6685508f29fec9e21c3c9c3",
+                "MacAddress": "02:42:ac:12:00:03",
+                "IPv4Address": "172.18.0.3/16",
+                "IPv6Address": ""
+            },
+            "ef78cd41a5d247940773d7ad62272e2e83f8ac0b9a1a57d17beb4db006420466": {
+                "Name": "busybox1",
+                "EndpointID": "5d8efaf80ca41e59ebc54d57e793451379218e59fc15febc1a403b5d1d1a3b68",
+                "MacAddress": "02:42:ac:12:00:02",
+                "IPv4Address": "172.18.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]
+```
+
+shell 1
+
+```shell script
+ping busybox2 -c 3
+PING busybox2 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.063 ms
+64 bytes from 172.18.0.3: seq=1 ttl=64 time=0.098 ms
+64 bytes from 172.18.0.3: seq=2 ttl=64 time=0.072 ms
+--- busybox2 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.063/0.077/0.098 ms
+```
+
+shell 2
+
+```shell script
+ping busybox1 -c 3
+PING busybox1 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.061 ms
+64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.083 ms
+64 bytes from 172.18.0.2: seq=2 ttl=64 time=0.093 ms
+--- busybox1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.061/0.079/0.093 ms
+```
 

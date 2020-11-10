@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+	
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -12,6 +13,6 @@ func main() {
 	router.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "PONG")
 	})
-
-	router.Run(":8080")
+	
+	_ = router.Run(":8080")
 }

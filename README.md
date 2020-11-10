@@ -4,19 +4,22 @@
     - [x] namespace
     - [x] cgroup
     - docker
-        - [ ] 安装 & 配置
-        - [ ] 容器基础操作
-        - [ ] docker image & registry
-        - [ ] dockerfile & 多阶段构建
-        - [ ] 存储结构
-        - [ ] 网络模式
-        - [ ] 基于 wordpress 的小样例
+        - [x] 基础知识
+        - [x] 安装 & 配置
+        - [x] 容器基础操作
+        - [x] 镜像基础操作
+        - [x] 镜像仓库
+        - [x] dockerfile & 多阶段构建
+        - [x] 存储卷
+        - [x] 网络模式
+        - [x] ufs
+        - [x] 基于 wordpress 的小样例
 - 第二天
     - docker
+        - [ ] docker compose
         - [ ] 容器启动流程
         - [ ] docker debug
-        - [ ] docker compose
-    - [ ] gocker
+        - [ ] gocker
     - kubernetes
         - 基础知识
             - 组件

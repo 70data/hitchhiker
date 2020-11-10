@@ -65,7 +65,7 @@ chroot、Linux namespace 机制为进程组实现独立视图，cgroup 对进程
 Xen 是通过代码修改已有的系统，形成一种新的可虚拟化的系统，调用硬件资源去启动多个系统。
 
 KVM 虚拟化全称为 Kernel-based Virtual Machine。
-基于内核的虚拟机（KVM）是针对包含虚拟化扩展（Intel VT 或 AMD-V）的 x86 硬件上的 Linux 的完全原生的虚拟化解决方案。
+基于内核的虚拟机(KVM)是针对包含虚拟化扩展(Intel VT 或 AMD-V)的 x86 硬件上的 Linux 的完全原生的虚拟化解决方案。
 
 Linux 中还有一种虚拟化技术 Qemu，和 KVM 互为补充，叫做 Qemu-kvm，它补充了 KVM 技术的不足，而且在性能上对 KVM 进行了优化。
 
@@ -213,12 +213,12 @@ RedHat 当时主打 OpenShift，但发展并不是很好。
 ## OCI & CNCF
 
 2015 年 6 月 22 日，由 Docker 公司牵头，CoreOS、Google、RedHat 等公司共同宣布，Docker 公司将 Libcontainer 捐出，并改名为 RunC 项目，交由一个完全中立的基金会管理，然后以 RunC 为依据，大家共同制定一套容器和镜像的标准和规范。
-这套标准和规范，就是 OCI（ Open Container Initiative ）。
+这套标准和规范，就是 OCI(Open Container Initiative)。
 
 - 改善 Docker 公司在容器技术上一家独大的现状。
 - 为其他玩家不依赖于 Docker 项目构建各自的平台层能力提供了可能。
 
-2015 年，Google、RedHat 等开源基础设施领域玩家们，共同牵头发起了一个名为 CNCF（Cloud Native Computing Foundation）的基金会。
+2015 年，Google、RedHat 等开源基础设施领域玩家们，共同牵头发起了一个名为 CNCF(Cloud Native Computing Foundation)的基金会。
 
 初衷：以 Kubernetes 项目为基础，建立一个由开源基础设施领域厂商主导的、按照独立基金会方式运营的平台级社区，来对抗以 Docker 公司为核心的容器商业生态。
 
