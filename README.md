@@ -1,4 +1,5 @@
 # hitchhiker-container
+
 - 第一天
     - [x] 虚拟机、容器历史
     - [x] namespace
@@ -16,7 +17,7 @@
         - [x] 基于 wordpress 的小样例
 - 第二天
     - docker
-        - [ ] docker compose
+        - [x] docker compose
         - [ ] 容器启动流程
         - [ ] docker debug
         - [ ] gocker
