@@ -53,19 +53,3 @@ API 的定义和实现都符合 HTTP REST 的格式，用户可以通过标准�
 
 > 官方设计文档 https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/principles.md
 
-
-
-
-
-A cluster is a set of nodes (physical or virtual machines) running Kubernetes agents, managed by the control plane. Kubernetes v1.19 supports clusters with up to 5000 nodes. More specifically, Kubernetes is designed to accommodate configurations that meet all of the following criteria:
-
-No more than 100 pods per node
-No more than 5000 nodes
-No more than 150000 total pods
-No more than 300000 total containers
-
-
-
-
-
-

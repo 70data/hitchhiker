@@ -37,3 +37,4 @@ kubectl -n kube-system exec -it cilium-ljhvg -- cilium monitor
 -> endpoint 512 flow 0x6165c37b identity 1->4666 state reply ifindex lxcb3b4dcf575e6 orig-ip 10.16.29.16: 10.16.29.16:6952 -> 10.217.0.222:48664 tcp ACK
 -> host from flow 0xe97a9ccb identity 4666->1 state established ifindex cilium_net orig-ip 0.0.0.0: 10.217.0.222:48664 -> 10.16.29.16:6952 tcp ACK
 ```
+

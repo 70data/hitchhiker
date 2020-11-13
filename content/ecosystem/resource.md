@@ -1,5 +1,3 @@
-![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20200920151551.png)
-
 ## 资源的压缩
 
 - 可压缩资源：CPU、网络

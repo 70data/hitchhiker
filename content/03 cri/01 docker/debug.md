@@ -2,7 +2,7 @@
 
 会暂停容器中所有进程
 
-```
+```shell script
 docker pause
 ```
 
@@ -10,7 +10,7 @@ docker pause
 
 在 `/etc/docker/daemon.json` 中开启 debug。
 
-```
+```json
 {
     "debug": true
 }
@@ -18,13 +18,13 @@ docker pause
 
 ### 重载配置
 
-```
-sudo kill -SIGHUP $(pidof dockerd)
+```shell script
+kill -SIGHUP $(pidof dockerd)
 ```
 
 ### Dump Docker Engine
 
-```
+```shell script
 kill -SIGUSR1 $(pidof dockerd)
 ```
 
@@ -32,7 +32,7 @@ kill -SIGUSR1 $(pidof dockerd)
 
 ### Dump UCP Container
 
-```
+```shell script
 #! /bin/bash
 CONTAINER_NAME=nginx
 pause_image=$(docker container inspect ${CONTAINER_NAME} --format {{.Config.Image}})
@@ -45,7 +45,7 @@ docker container rm nginx-pause
 
 ### Dump containerd
 
-```
+```shell script
 kill -s USR1 $(pidof containerd)
 ```
 

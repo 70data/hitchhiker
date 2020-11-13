@@ -193,3 +193,4 @@ kubectl -n kube-system exec cilium-zrl7g cilium policy get
 ]
 Revision: 4
 ```
+

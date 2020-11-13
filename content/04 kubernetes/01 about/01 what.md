@@ -35,6 +35,7 @@ RedHat 是第一批与 Google 合作研发 Kubernetes 的公司之一，作为 K
 由于它们与基础架构分离，因此可以跨云和 OS 分发进行移植。
 
 容器因具有许多优势而变得流行起来。
+
 下面列出了容器的一些好处：
 - 敏捷应用程序的创建和部署，与使用虚拟机镜像相比，提高了容器镜像创建的简便性和效率。
 - 持续开发、集成和部署，通过快速简单的回滚(由于镜像不可变性)，提供可靠且频繁的容器镜像构建和部署。
@@ -130,18 +131,6 @@ UNIX 一切皆文件的设计带来了用户程序设计的很多便利，但它
 
 正是因为性能原因，OS X 和 Windows 都选择了 hybrid kernel 的架构。
 
-
-
-
-
-
-
-
-
-
-
-
-
 ### Kubernetes 和微内核
 
 性能问题对单机操作系统来说可能是至关重要的，但对分布式操作系统并非如此。
@@ -149,61 +138,71 @@ UNIX 一切皆文件的设计带来了用户程序设计的很多便利，但它
 
 ##### Borg 的诞生
 
-在单机操作系统大战快要分出胜负之时，Google 这家行业新宠正准备 IPO，用现在的话来说，Google 那时是一家小巨头，已经初露锋芒，不容小觑，但巨头们彼时正陷入战争泥潭，无暇顾及之。
+2003 年，为了更好地支持新版本的搜索引擎，基于 MapReduce，使其能服务好亿万用户，Google 开始了大规模集群管理系统的开发，这个系统叫做 Borg，它的目标是管理以万台为单位的计算机集群。
+从操作系统的角度来看，Borg 是一个 monolithic 系统，任何对系统的功能升级都需要深入到 Borg 底层代码来修改支持。
 
+在 2010 年左右，随着 Google 中国部门的撤销，很多优秀的 Google 工程师加入了 BAT 等中国公司，其中一部分加入了腾讯搜搜。
+这些前 Googler 加入腾讯后，复刻了 Google 的许多系统，技术上也很出色，其中 Borg 的复制品叫做 TBorg，后来改名为 Torca。
+Torca 在搜搜的广告业务中起到了非常重要的作用，后来由于腾讯业务调整，搜搜与搜狗合并，Torca 在腾讯内部失去用户，逐渐停止了维护。
 
-2003年，为了更好地支持新版本的搜索引擎（基于MapReduce），使其能服务好亿万用户，Google开始了大规模集群管理系统的开发，这个系统叫做Borg，它的目标是管理以万台为单位的计算机集群。虽然刚开始只有3、4个人的小团队，但Borg还是跟上了Google的飞速发展，证明了它的潜力，最终Google的全部机器都由Borg管理，MapReduce、Pregel等著名系统都建立于Borg之上。从操作系统的角度来看，Borg是一个monolithic系统，任何对系统的功能升级都需要深入到Borg底层代码来修改支持。在Google这样成熟的技术型公司中，有很多优秀的工程师，因此这个问题在内部系统中并不算严重。但如果是公有云，必然要接入许多第三方应用的需求，一家公司的工程师团队再强大，也无法把业界所有其他系统都接入Borg，这时系统的可扩展性将非常重要。
+##### Omega 的诞生
 
-在2010年左右，随着Google中国部门的撤销，很多优秀的Google工程师加入了BAT等中国公司，其中一部分加入了腾讯搜搜。这些前Googler加入腾讯后，复刻了Google的许多系统，技术上也很出色，其中Borg的复制品叫做TBorg，后来改名为Torca。Torca在搜搜的广告业务中起到了非常重要的作用，后来由于腾讯业务调整，搜搜与搜狗合并，Torca在腾讯内部失去用户，逐渐停止了维护。
+在 Borg 上线几年后，Google 意识到 monolithic 架构的问题和瓶颈，于是又一支小团队开始了 Omega 系统的研发。
 
-在Borg上线几年后，Google意识到monolithic架构的问题和瓶颈，于是又一支小团队开始了Omega系统的研发。Omega系统继承的是微内核的思想，新的功能升级几乎不需修改底层代码就能完成，它比Borg更加灵活，有更好的伸缩性。但因为当时Google的全部系统已经搭建在Borg之上了，由于Borg的monolithic特性，MapReduce等系统都紧密绑定到Borg核心代码，不但无缝迁移到Omega系统是不可能的，迁移还要花巨大的人力、时间和试错成本，因此即使核心成员坚持不懈地推动，Omega系统在Google仍未能取得成功。
+Omega 系统继承的是微内核的思想，新的功能升级几乎不需修改底层代码就能完成，它比 Borg 更加灵活，有更好的伸缩性。
+但因为当时 Google 的全部系统已经搭建在 Borg 之上了，由于 Borg 的 monolithic 特性，MapReduce 等系统都紧密绑定到 Borg 核心代码，不但无缝迁移到 Omega 系统是不可能的，迁移还要花巨大的人力、时间和试错成本。
+因此即使核心成员坚持不懈地推动，Omega 系统在 Google 仍未能取得成功。
 
-有趣的是，Omega项目的核心成员之一Brendan Burns的职业轨迹和操作系统领域的大前辈David Cutler有不少相似之处。
+##### Kubernetes 的诞生
 
-他们同样毕业于文理学院：David Cutler毕业于Olivet College，Brendan Burns毕业于Williams College。
-他们同样在毕业后加入了一家传统行业的巨头：David Cutler毕业后加入杜邦，Brendan Burns毕业后加入汤姆森金融。
-正如教父所说，一个男人只能有一种命运，Cutler和Burns在这两家传统巨头学会了写代码，也许就是在那时，他们发现了自己在软件上的天分，发现了自己的命运是构建新一代操作系统。因此他们同样在第二份工作中选择了当时最炙手可热的科技巨头：David Cutler加入DEC，Brendan Burns加入Google。
-他们同样在微软到达了职业生涯的顶峰：Brendan Burns现如今已是微软的Corporate VP，而David Cutler老爷子早已是微软唯一的Senior Technical Fellow，据传微软甚至有条规定，Cutler的技术职级必须是全公司最高的，任何人升到Cutler的level，Cutler就自动升一级。
-Kubernetes的诞生
-在单机操作系统时代，hybrid kernel盛行一时，这证明了微内核在软件架构上的成功，但因为性能问题，又没有任何一个成功的内核采用「纯粹的」微内核架构，因此微内核从实用角度上来说是失败的。
+在单机操作系统时代，hybrid kernel 盛行一时，这证明了微内核在软件架构上的成功。
+但因为性能问题，又没有任何一个成功的内核采用纯粹的微内核架构，因此微内核从实用角度上来说是失败的。
 
-和单机操作系统时代中微内核架构的失败原因不同，Omega在Google公司内部的失败和性能问题无关，只是历史遗留问题的影响。对开源社区和大部分公司来说，尚无能和Borg相媲美的系统，也没有历史负担，因此几年后，Google决定开源Omega这一超越Borg的新一代分布式操作系统，将其命名为Kubernetes。
+和单机操作系统时代中微内核架构的失败原因不同，Omega 在 Google 公司内部的失败和性能问题无关，只是历史遗留问题的影响。
+对开源社区和大部分公司来说，尚无能和 Borg 相媲美的系统，也没有历史负担。
+因此几年后，Google 决定开源 Omega 这一超越 Borg 的新一代分布式操作系统，将其命名为 Kubernetes。
 
-为了介绍清楚Kubernetes和微内核的关系，以及微内核架构为Kubernetes带来的优势，这里有必要引入一些技术细节。
+单机操作系统的系统调用需要陷入内核，所谓的陷入(trap)也叫做中断(interrupt)。
+无论内核是什么类型，单机操作系统都需要在启动时将系统调用注册到内存中的一个区域里，这个区域叫做中断向量(Interrupt Vector)或中断描述符表(IDT，Interrupt Descriptor Table)。
 
-上文中提到，单机操作系统的系统调用需要「陷入」内核，所谓的陷入（trap）也叫做中断（interrupt），无论内核是什么类型，单机操作系统都需要在启动时将系统调用注册到内存中的一个区域里，这个区域叫做中断向量（Interrupt Vector）或中断描述符表（IDT，Interrupt Descriptor Table）。当然，现代操作系统的中断处理非常复杂，系统调用也很多，因此除了IDT之外，还需要一张系统调用表（SCV，System Call Vector），系统调用通过一个统一的中断入口（如INT 80）调用某个中断处理程序，由这个中断处理程序通过SCV把系统调用分发给内核中不同的函数代码。因此SCV在操作系统中的位置和在星际争霸中的位置同样重要。对微内核架构来说，除了SCV中的系统调用之外，用户态服务提供什么样的系统能力，同样需要注册到某个区域。
+当然，现代操作系统的中断处理非常复杂，系统调用也很多。
+因此除了 IDT 之外，还需要一张系统调用表(SCV，System Call Vector)。
+系统调用通过一个统一的中断入口调用某个中断处理程序，由这个中断处理程序通过 SCV 把系统调用分发给内核中不同的函数代码。因此 SCV 在操作系统中的位置非常重要。
+对微内核架构来说，除了 SCV 中的系统调用之外，用户态服务提供什么样的系统能力，同样需要注册到某个区域。
 
-与此类似，Kubernetes这样的分布式操作系统对外提供服务是通过API的形式，分布式操作系统本身提供的API相当于单机操作系统的系统调用，每个API也需要能够注册到某个位置。对Kubernetes来说，API会注册到ectd里。Kubernetes本身提供的相当于系统调用的那些API，通过名为Controller的组件来支持，由开发者为Kubernetes提供的新的API，则通过Operator来支持，Operator本身和Controller基于同一套机制开发。这和微内核架构的思想一脉相承：Controller相当于内核态中运行的服务，提供线程、进程管理和调度算法等核心能力，Operator则相当于微内核架构中GUI、文件系统、打印机等服务，在用户态运行。
+与此类似，Kubernetes 这样的分布式操作系统对外提供服务是通过 API 的形式。
+分布式操作系统本身提供的 API 相当于单机操作系统的系统调用，每个 API 也需要能够注册到某个位置。
 
-因此，Kubernetes的工作机制和单机操作系统也较为相似，etcd提供一个watch机制，Controller和Operator需要指定自己watch哪些内容，并告诉etcd，这相当于是微内核架构在IDT或SCV中注册系统调用的过程。
+对 Kubernetes 来说，API 会注册到 ectd 里。
+Kubernetes 本身提供的相当于系统调用的那些 API，通过名为 Controller 的组件来支持。
+由开发者为 Kubernetes 提供的新的 API，则通过 Operator 来支持。
+Operator 本身和 Controller 基于同一套机制开发。
+这和微内核架构的思想一脉相承：Controller 相当于内核态中运行的服务，提供线程、进程管理和调度算法等核心能力，Operator 则相当于微内核架构中 GUI、文件系统、打印机等服务，在用户态运行。
 
-以Argo为例，Argo是个Operator，提供在Kubernetes中执行一个DAG工作流的能力。用户在使用kubectl命令提交Argo任务时，实际是让kubectl将Argo的yaml提交给Kubernetes的API Server，API Server将yaml中的Key-Value数据写入etcd，etcd将会提醒那些正在watch指定Key的服务。在我们的例子中，这个服务也就是Argo。这正像是微内核架构里用户进程请求用户态服务的过程。
+因此，Kubernetes 的工作机制和单机操作系统也较为相似。
+etcd 提供一个 watch 机制，Controller 和 Operator 需要指定自己 watch 哪些内容，并告诉 etcd，这相当于是微内核架构在 IDT 或 SCV 中注册系统调用的过程。
 
-Argo得到etcd watch的http请求，去etcd读出yaml中的数据并解析, 然后知道要去启动什么容器，并通过API要求Kubernetes启动相应的容器。Kubernetes scheduler是一个Controller，在收到启动容器请求后，分配资源，启动容器。这是微内核架构中用户进程通过系统调用启动另一个进程的过程。
+当然，Kubernetes 和单机操作系统也有不同之处：
+Kubernetes 没有明确的陷入过程，而微内核架构的单机操作系统在访问系统调用时需要陷入，在访问用户态服务时则不需要陷入。
+但是，Kubernetes 可以为不同的服务设置不同的权限，这一点在一定程度上类似于单机操作系统中内核态和用户态的 CPU 权限的区别。
 
-当然，Kubernetes和单机操作系统也有不同之处：Kubernetes没有明确的「陷入」过程，而微内核架构的单机操作系统在访问系统调用时需要陷入，在访问用户态服务时则不需要陷入。但是，Kubernetes可以为不同的服务设置不同的权限，这一点在一定程度上类似于单机操作系统中内核态和用户态的CPU权限的区别。
+微内核在架构上的优势在 Kubernetes 中显露无遗：
+在 Borg 中，开发者想要添加新的子系统是非常复杂的，往往需要修改 Borg 底层代码，而新系统也因此会绑定到 Borg 上。
+而对 Kubernetes 来说，开发者只需要基于 Kubernetes 提供的 SDK 实现一个 Operator，就能够添加一组新的 API，而不需要关注 Kubernetes 的底层代码。
 
-微内核在架构上的优势在Kubernetes中显露无遗：在Borg中，开发者想要添加新的子系统是非常复杂的，往往需要修改Borg底层代码，而新系统也因此会绑定到Borg上。而对Kubernetes来说，开发者只需要基于Kubernetes提供的SDK实现一个Operator，就能够添加一组新的API，而不需要关注Kubernetes的底层代码。Argo、Kubeflow都是Operator的应用。任何已有软件都可以方便地通过Operator机制集成到Kubernetes中，因而Kubernetes非常适合作为公有云的底层分布式操作系统，正因如此，Kubernetes在2014年年中发布，经过2015年一年的成长，在2016年便成为业界主流，对于没有历史负担的公司，也将Kubernetes作为内部云的底层系统使用。
+任何已有软件都可以方便地通过 Operator 机制集成到 Kubernetes 中，因而 Kubernetes 非常适合作为公有云的底层分布式操作系统。
+正因如此，Kubernetes 在 2014 年年中发布，经过 2015 年一年的成长，在 2016 年便成为业界主流。
+对于没有历史负担的公司，也将 Kubernetes 作为内部云的底层系统使用。
 
-尾声
-在这篇文章中，我们介绍了单机操作系统的发展简史，介绍了微内核架构在这个历史进程中从兴起到衰落的过程，也介绍了微内核架构在Kubernetes中重新焕发生机的过程。总的来说，显著超前于时代的技术虽然未必能在被提出的时代取得成功，但一定会在多年后，在时代跟上来之后，拿回属于自己的荣耀。微内核架构在单机操作系统的时代和云计算的时代的不同遭遇证明了这一点，深度学习在低算力时代和高算力时代的不同遭遇也证明了这一点。
+### 尾声
 
-值得一提的是，在Kubernetes之后，Google推出了Fuchsia作为Android可能的替代品。而Fuchsia基于Zircon内核开发，Zircon基于C++开发，正是微内核架构。在算力井喷的现代，除了在分布式操作系统领域，微内核能否也在手机/物联网操作系统领域复兴，让我们拭目以待。
+总的来说，显著超前于时代的技术虽然未必能在被提出的时代取得成功。
+但一定会在多年后，在时代跟上来之后，拿回属于自己的荣耀。
 
+微内核架构在单机操作系统的时代和云计算的时代的不同遭遇证明了这一点，深度学习在低算力时代和高算力时代的不同遭遇也证明了这一点。
 
+值得一提的是，在 Kubernetes 之后，Google 推出了 Fuchsia 作为 Android 可能的替代品。
+而 Fuchsia 基于 Zircon 内核开发，Zircon 基于 C++ 开发，正是微内核架构。
 
-
-
-
-
-
-
-
-
-kubectl create secret generic etcd-client-tls --from-file=etcd-client-ca.crt --from-file=etcd-client.crt --from-file=etcd-client.key
-kubectl create secret generic etcd-peer-tls --from-file=peer-ca.crt --from-file=peer.crt --from-file=peer.key
-kubectl create secret generic etcd-server-tls --from-file=server-ca.crt --from-file=server.crt --from-file=server.key
-
-
-
+在算力井喷的现代，除了在分布式操作系统领域，微内核能否也在手机/物联网操作系统领域复兴，拭目以待。
 
