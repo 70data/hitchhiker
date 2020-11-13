@@ -192,6 +192,18 @@ Argo得到etcd watch的http请求，去etcd读出yaml中的数据并解析, 然�
 
 
 
-本文内容主要基于王益最近给SQLFlow 和ElasticDL 团队的分享。沈凋墨和章海涛、武毅、闫旭、张科等一起总结。这个总结解释了 SQLFlow 作为一个 Kubernetes-native 的分布式编译器的设计思路基础，也解释了 ElasticDL 只针对 Kubernetes 平台做分布式 AI 的原因。本文作者中包括百度 Paddle EDL 的作者。Paddle EDL 是基于 PaddlePaddle 和 Kubernetes 的分布式计算框架，于 2018 年贡献给 Linux Foundation.
+
+
+
+
+
+
+
+
+kubectl create secret generic etcd-client-tls --from-file=etcd-client-ca.crt --from-file=etcd-client.crt --from-file=etcd-client.key
+kubectl create secret generic etcd-peer-tls --from-file=peer-ca.crt --from-file=peer.crt --from-file=peer.key
+kubectl create secret generic etcd-server-tls --from-file=server-ca.crt --from-file=server.crt --from-file=server.key
+
+
 
 
