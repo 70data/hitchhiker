@@ -12,3 +12,5 @@ Kubernetes v1.19 支持最多 5000 个节点的集群。
 
 ![images](http://70data.net/upload/kubernetes/assetsF-LDAOok5ngY4pc1lEDesF-La8Wy3SQAP-8onLZ7uTF-La8X6ljrf3pM1bbtQ_0Fcore-packages.png)
 
+![images](https://70data.oss-cn-beijing.aliyuncs.com/note/20201114142804.svg)
+

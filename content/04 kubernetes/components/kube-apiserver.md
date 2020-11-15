@@ -5,7 +5,7 @@
 
 ![images](http://70data.net/upload/kubernetes/709700eea03075bed35c25b5b6cdefda.png)
 
-## OpenAPI & Swagger
+### OpenAPI & Swagger
 
 通过 `/swaggerapi` 可以查看 Swagger API，开启 `--enable-swagger-ui=true` 后还可以通过 `/swagger-ui` 访问 Swagger UI。
 
@@ -14,4 +14,26 @@
 ## 访问控制
 
 ![images](http://70data.net/upload/kubernetes/assets_-LDAOok5ngY4pc1lEDes_-LpOIkR-zouVcB8QsFj__-LpOIpdEZgWQrGyDjwu1_access_control.png)
+
+## api-resources
+
+在命名空间中的资源
+
+```shell script
+kubectl api-resources --namespaced=true
+```
+
+不在命名空间中的资源
+
+```shell script
+kubectl api-resources --namespaced=false
+```
+
+## explain
+
+kubectl explain 命令可以将资源对象的详细属性都展示出来
+
+```shell script
+kubectl explain events
+```
 

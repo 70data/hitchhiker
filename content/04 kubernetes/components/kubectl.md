@@ -23,13 +23,13 @@ Pod 启动过程：
 
 ## 指定配置文件
 
-```
+```shell script
 /data/server/kubernetes/bin/kubectl --kubeconfig=/data/server/kubernetes/kubeconfig
 ```
 
 ## 命令补全
 
-```
+```shell script
 yum install bash-completion
 
 source /usr/share/bash-completion/bash_completion

@@ -111,7 +111,7 @@ LivenessProbe 能让 Kubernetes 知道应用是否存活。
 - CPU
 - Memory
 
-```
+```yaml
 status:
   allocatable:
     cpu: "8"
@@ -162,7 +162,7 @@ CPU 资源指的是 CPU 时间，基本单位是 millicores，1 核等于 1000 m
 
 当某个容器的 CPU request 值为 x millicores 时，Kubernetes 会为这个 container 所在的 Cgroup 的 `cpu.shares` 的值设为 `x * 1024 / 1000`。
 
-```
+```shell script
 cpu.shares = (cpu in millicores * 1024) / 1000
 ```
 
@@ -172,7 +172,7 @@ CPU limit，Kubernetes 是通过 CPU Cgroup 控制模块中的 `cpu.cfs_period_u
 
 Kubernetes 会为这个 container Cgroup 配置两条信息：
 
-```
+```shell script
 cpu.cfs_period_us = 100000 (i.e. 100ms)
 cpu.cfs_quota_us = quota = (cpu in millicores * 100000) / 1000
 ```
@@ -182,7 +182,7 @@ cpu.cfs_quota_us = quota = (cpu in millicores * 100000) / 1000
 container level Cgroup 中有不会体现 Memory request，只会体现 Memory limit。
 依赖配置 `memory.limit_in_bytes`。
 
-```
+```shell script
 memory.limit_in_bytes = memory limit bytes
 ```
 

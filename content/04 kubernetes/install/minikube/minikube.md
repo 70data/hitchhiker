@@ -21,21 +21,21 @@ Minikube 是一个运行在 Linux、macOS、Windows 的本地 Kubernetes 集群�
 下载 Minikube。
 https://github.com/kubernetes/minikube/releases
 
-```
-[root@kata1001v k8s]# wget https://github.com/kubernetes/minikube/releases/download/v1.6.2/minikube-linux-amd64
+```shell script
+wget https://github.com/kubernetes/minikube/releases/download/v1.6.2/minikube-linux-amd64
 ```
 
 启动
 
 因为是物理机（bare-metal）启动，所以需要加参数 `--vm-driver=none`。
 
-```
+```shell script
 minikube start --vm-driver=none
 ```
 
 查看部署
 
-```
+```shell script
 /data/server/k8s/bin/kubectl --kubeconfig=/data/server/k8s/config/mini.kubeconfig  get all --all-namespaces
 NAMESPACE     NAME                                   READY   STATUS    RESTARTS   AGE
 kube-system   pod/coredns-6955765f44-254pd           1/1     Running   0          8m45s
@@ -64,19 +64,19 @@ kube-system   replicaset.apps/coredns-6955765f44   2         2         2       8
 
 停止
 
-```
+```shell script
 minikube stop
 ```
 
 删除
 
-```
+```shell script
 minikube delete --all
 ```
 
 ## 清理环境
 
-```
+```shell script
 systemctl stop kubelet.service
 
 rm -rf /var/lib/kubelet/
@@ -109,3 +109,4 @@ iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
 
 ipvsadm --clear
 ```
+

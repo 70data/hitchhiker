@@ -243,6 +243,11 @@ docker start <ContainerName>||<ContainerID>
 ```
 
 ```shell script
+# 暂停容器，会暂停容器中所有进程
+docker pause
+```
+
+```shell script
 # 删除停止运行的容器
 docker rm <ContainerName>||<ContainerID>
 

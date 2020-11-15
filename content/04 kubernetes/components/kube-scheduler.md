@@ -50,7 +50,7 @@ Prioritie 策略：
 
 指定 Pod 的优先级之前需要先定义一个 PriorityClass
 
-```
+```yaml
 apiVersion: v1
 kind: PriorityClass
 metadata:
@@ -65,7 +65,7 @@ description: "This priority class should be used for XYZ service pods only."
 
 在 PodSpec 中通过 PriorityClassName 设置 Pod 的优先级
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:

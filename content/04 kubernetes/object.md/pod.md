@@ -9,22 +9,22 @@ Pod 的设计理念是支持多个容器在一个 Pod 中共享网络和文件�
 
 | Dockerfile 指令 | 描述                    | 支持 | 说明                                          |
 | --------------- | ---------------------- | ---- | -------------------------------------------- |
-| USER            | 进程运行用户以及用户组    | 是   | securityContext.runAsUser/supplementalGroups |
-| WORKDIR         | 工作目录                | 是   | containerSpec.workingDir                     |
-| ENV             | 环境变量                | 是   | containerSpec.env                            |
-| ENTRYPOINT      | 启动命令                | 是   | containerSpec.command                        |
-| CMD             | 命令的参数列表           | 是   | containerSpec.args                           |
-| VOLUME          | 数据卷                  | 是   | 使用 volumes 和 volumeMounts                 |
-| STOPSIGNAL      | 停止容器时给进程发送的信号 | 是   | SIGKILL                                      |
-| EXPOSE          | 对外开放的端口           | 否   | 使用 containerSpec.ports.containerPort 替代   |
-| SHELL           | 运行启动命令的 SHELL     | 否   | 使用镜像默认 SHELL 启动命令                     |
-| HEALTHCHECK     | 健康检查                | 否   | 使用 livenessProbe 和 readinessProbe 替代     |
+| USER            | 进程运行用户以及用户组     | 是   | securityContext.runAsUser/supplementalGroups |
+| WORKDIR         | 工作目录                | 是    | containerSpec.workingDir                     |
+| ENV             | 环境变量                | 是    | containerSpec.env                            |
+| VOLUME          | 数据卷                  | 是   | 使用 volumes 和 volumeMounts                   |
+| ENTRYPOINT      | 启动命令                | 是    | containerSpec.command                        |
+| CMD             | 命令的参数列表           | 是    | containerSpec.args                           |
+| SHELL           | 运行启动命令的 SHELL     | 否    | 使用镜像默认 SHELL 启动命令                      |
+| STOPSIGNAL      | 停止容器时给进程发送的信号 | 是    | SIGKILL                                      |
+| EXPOSE          | 对外开放的端口           | 否    | 使用 containerSpec.ports.containerPort 替代    |
+| HEALTHCHECK     | 健康检查                | 否    | 使用 livenessProbe 和 readinessProbe 替代      |
 
 ## 镜像
 
 在使用私有镜像时，需要创建一个 docker registry secret，并在容器中引用。
 
-```
+```shell script
 kubectl create secret docker-registry regsecret --docker-server=<registry-server> --docker-username=<name> --docker-password=<pword> --docker-email=<email>
 ```
 
@@ -65,7 +65,7 @@ kubectl create secret docker-registry regsecret --docker-server=<registry-server
 - LivenessProbe 探针，用于判断容器是否健康。
 - ReadinessProbe 探针，用于判断容器是否启动完成且准备接收请求。
 
-#### LivenessProbe
+##### LivenessProbe
 
 探测应用是否处于健康状态，如果不健康则删除并重新创建容器。
 LivenessProbe 能让 Kubernetes 知道应用是否存活。
@@ -73,7 +73,7 @@ LivenessProbe 能让 Kubernetes 知道应用是否存活。
 如果 LivenessProbe 探测到容器不健康，则 kubelet 将删除该容器，并根据容器的重启策略做相应的处理。
 如果一个容器不包含 LivenessProbe，那么 kubelet 认为该容器的 LivenessProbe 返回的值永远是 "Success"。
 
-#### ReadinessProbe
+##### ReadinessProbe
 
 探测应用是否启动完成并且处于正常服务状态，如果不正常则不会接收来自 Service 的流量。
 设计 ReadinessProbe 的目的是用来让 Kubernetes 知道应用何时能对外提供服务。
@@ -112,29 +112,42 @@ Init 容器的重启策略：
 
 ## 启动流程
 
-### 计算 Pod 中沙箱和容器的变更
-
-### 强制停止 Pod 对应的沙箱
-
-### 强制停止所有不应该运行的容器
-
 ### 为 Pod 创建新的沙箱
+
+##### pause
+
+创建 Pod 时 kubelet 先调用 CRI 接口 RuntimeService.RunPodSandbox 来创建一个沙箱（Pod Sandbox），为 Pod 设置基础运行环境。
+当 Pod Sandbox 建立起来后，kubelet 就可以在里面创建用户容器。
+删除 Pod 时，kubelet 会先移除 Pod Sandbox 然后再停止用户容器。
+
+在 Linux CRI 体系里，Pod Sandbox 其实就是 pause 容器。
+
+- 在 Pod 中它作为共享 Linux Namespace 的基础。
+- 启用 PID Namespace 共享，它为每个 Pod 提供 1 号进程，并收集 Pod 内的僵尸进程。
+
+#### Namespace 挂载
+
+使用主机的 IPC 命名空间 `spec.hostIPC: true`，默认为 false。
+
+使用主机的网络命名空间 `spec.hostNetwork: true`，默认为 false。同一个 Pod 中的多个容器会被共同分配到同一个 Host 上并且共享网络栈。
+
+使用主机的 PID 命名空间 `spec.hostPID: true`，默认为 false。
 
 ### 创建 Pod 规格中指定的初始化容器
 
 ### 依次创建 Pod 规格中指定的常规容器
 
-#### 通过镜像拉取器获得当前容器中使用镜像的引用
+### 通过镜像拉取器获得当前容器中使用镜像的引用
 
-#### 调用远程的 runtimeService 创建容器
+### 调用远程的 runtimeService 创建容器
 
-#### 调用内部的生命周期方法 PreStartContainer 为当前的容器设置分配的 CPU 等资源
+### 调用内部的生命周期方法 PreStartContainer 为当前的容器设置分配的 CPU 等资源
 
-#### 调用远程的 runtimeService 开始运行镜像
+### 调用远程的 runtimeService 开始运行镜像
 
-##### Volume
+### Volume
 
-```
+```go
 func (kl *kubelet) syncPod(o syncPodOptions) error {
     if !kl.podIsTerminated(pod) {
         kl.volumeManager.WaitForAttachAndMount(pod)
@@ -146,9 +159,9 @@ func (kl *kubelet) syncPod(o syncPodOptions) error {
 }
 ```
 
-##### 网络
+### 网络
 
-```
+```go
 func (ds *dockerService) RunPodSandbox(ctx context.Context, r *runtimeapi.RunPodSandboxRequest) (*runtimeapi.RunPodSandboxResponse, error) {
     config := r.GetConfig()
     // Step 1: Pull the image for the sandbox.
@@ -170,24 +183,7 @@ func (ds *dockerService) RunPodSandbox(ctx context.Context, r *runtimeapi.RunPod
 }
 ```
 
-#### 如果当前的容器包含 PostStart 钩子就会执行该回调
+### PostStart
 
-### pause
-
-创建 Pod 时 kubelet 先调用 CRI 接口 RuntimeService.RunPodSandbox 来创建一个沙箱（Pod Sandbox），为 Pod 设置基础运行环境。
-当 Pod Sandbox 建立起来后，kubelet 就可以在里面创建用户容器。
-删除 Pod 时，kubelet 会先移除 Pod Sandbox 然后再停止用户容器。
-
-在 Linux CRI 体系里，Pod Sandbox 其实就是 pause 容器。
-
-- 在 Pod 中它作为共享 Linux Namespace 的基础。
-- 启用 PID Namespace 共享，它为每个 Pod 提供 1 号进程，并收集 Pod 内的僵尸进程。
-
-#### Namespace 挂载
-
-使用主机的 IPC 命名空间 `spec.hostIPC: true`，默认为 false。
-
-使用主机的网络命名空间 `spec.hostNetwork: true`，默认为 false。同一个 Pod 中的多个容器会被共同分配到同一个 Host 上并且共享网络栈。
-
-使用主机的 PID 命名空间 `spec.hostPID: true`，默认为 false。
+如果当前的容器包含 PostStart，钩子就会执行该回调
 

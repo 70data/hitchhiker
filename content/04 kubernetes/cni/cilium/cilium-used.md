@@ -1,11 +1,3 @@
-## IPVlan
-
-https://docs.cilium.io/en/v1.7/gettingstarted/ipvlan/
-
-## Host-Reachable Services
-
-https://docs.cilium.io/en/v1.7/gettingstarted/host-services/
-
 ## Kubernetes without kube-proxy
 
 如果使用 yaml 安装，需要声明环境变量 `KUBERNETES_SERVICE_HOST`、`KUBERNETES_SERVICE_PORT`。
@@ -14,7 +6,7 @@ https://docs.cilium.io/en/v1.7/gettingstarted/host-services/
 
 查看 Cilium 加载模块
 
-```
+```shell script
 kubectl exec -it -n kube-system cilium-5ztht -- cilium status | grep KubeProxyReplacement
 KubeProxyReplacement: Strict [NodePort (SNAT, 30000-32767), ExternalIPs, HostReachableServices (TCP, UDP)]
 ```
@@ -25,7 +17,7 @@ http://70data.net/upload/manifest/nginx/nginx-deployment.yaml
 
 http://70data.net/upload/manifest/nginx/nginx-service-nodeport.yaml
 
-```
+```shell script
 kubectl apply -f nginx-deployment.yaml
 
 kubectl apply -f nginx-service-nodeport.yaml
@@ -131,8 +123,4 @@ DSR 模式的另一个优点是保留了客户机的源 IP（ SNAT 模式下不�
 DSR 模式需要依赖 直接路由/本地路由。
 
 如果使用 helm 安装，可以通过设置 helm 中的 `global.nodePort.mode` 参数，启动 DSR 模式。
-
-## Cluster Mesh
-
-https://docs.cilium.io/en/v1.7/gettingstarted/clustermesh/
 

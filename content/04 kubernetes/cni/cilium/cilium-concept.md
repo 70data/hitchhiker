@@ -50,27 +50,5 @@ Cilium Operator 负责管理集群中的任务。
 Cilium 完全控制了集群内端到端的连接，通过将信息嵌入到封装的报头中，它可以在两个容器主机之间传输状态和安全上下文信息，从而可以跟踪哪些 label 被作用到容器上。
 容器本身不知道它所运行的底层网络。它只包含一个指向集群节点的 IP 地址的默认路由。由于在 Linux 内核中删除了路由缓存，减少了每个连接流缓存（TCP metrics）中需要保持的状态数量，从而允许终止每个容器中的数百万个连接。
 
-### Overlay
-
-https://docs.cilium.io/en/v1.7/concepts/networking/#overlay-network-mode
-
-### 直接路由
-
-https://docs.cilium.io/en/v1.7/concepts/networking/#direct-native-routing-mode
-
-### 与外部主机的容器通信
-
-https://docs.cilium.io/en/v1.7/concepts/networking/#container-communication-with-external-hosts
-
-### 外部网络连接
-
-https://docs.cilium.io/en/v1.7/concepts/networking/#external-network-connectivity
-
-### Public Endpoint
-
-https://docs.cilium.io/en/v1.7/concepts/networking/#public-endpoint-exposure
-
-## 架构
-
-https://docs.cilium.io/en/v1.7/architecture/
+https://docs.cilium.io/en/v1.8/concepts/networking/
 

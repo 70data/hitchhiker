@@ -38,7 +38,7 @@ Apollo 跟其他两个调度框架不同之处在于其共享状态是只读的�
 逻辑上的共享状态调度架构也可以不通过将整个集群的状态分布在其他地方来实现。
 这种方式中，每台机器维护其自己的状态并发送更新的请求到其他对该节点感兴趣的代理，比如调度器、设备健康监控器和资源监控系统等。每个物理设备的本地状态都成为了整个集群的共享状态的分片之一。
 
-- 共享状态调度框架必须工作在有稳定信息的情况下，在集群资源的竞争度很高的情况下有可能造成调度器的性能下降。
+共享状态调度框架必须工作在有稳定信息的情况下，在集群资源的竞争度很高的情况下有可能造成调度器的性能下降。
 
 ### 全分布式框架
 
@@ -69,7 +69,6 @@ Tarcil、Mercury、Hawk 一般有两条调度路径。一条是为部分负载�
 - Task Tracker 运行在集群的每一台机器上，负责在主机上运行具体的任务，并且汇报状态。
 
 问题：
-
 - 资源利用率比较低。MapReduce v1 给每个节点静态配置了固定数目的 Slot，每个 Slot 也只能够运行的特定的任务的类型，这就导致资源利用率有问题。比如大量 Map 任务在排队等待空闲资源，但实际上机器有大量 Reduce 的 Slot 被闲置。
 - 性能有一定瓶颈。支持管理的最大节点数是 5 千个节点，支持运行的任务最大数量 4 万。
 - 多租户和多版本的问题。
@@ -87,7 +86,6 @@ Tarcil、Mercury、Hawk 一般有两条调度路径。一条是为部分负载�
 将原来的 Job Tracker 的任务调度职责拆分出来，大幅度提高了性能。原来的 Job Tracker 的任务调度的职责拆分出来由 Application Master 承担，并且 Application Master 是分布式的，每一个实例只处理一个作业的请求，将原来能够支撑的集群节点最大数量，从原来的 5 千节点提升到 1 万节点。
 
 问题：
-
 - Resource Manager 提供资源的方式是被动的，当资源的消费者（Application Master) 需要资源的时候，会调用 Resource Manager 的接口来获取到资源，Resource Manager 只是被动的响应 Application Master 的需求。决定权在于 Yarn 本身。
 - Resource Manager 负责所有应用的任务调度，各个应用作为 Yarn 的一个 client library。传统应用，接入比较困难。
 - Yarn 的资源管理和分配，只有内存一个维度。 
@@ -123,7 +121,6 @@ DRF 的最终目的是把资源平均的分配给所有 Framework，如果一个
 - 自己被饿死。因为这个 Framework 的支配资源占用率一直很高，所以长期无法获得 Offer 的机会，也就没法运行更多的任务。
 
 问题：
-
 - Mesos 提供资源的方式是主动的。Mesos 本身并不知道各个应用程序资源需求，为了一致性，Master 一次只能给一个 Framework 提供 Offer，等待这个 Framework 挑选完 Offer 之后，再把剩余的提供给下一个 Framework。所以会出现有资源需求的 Framework 在排队等待 Offer，但是没有资源需求的 Framework 却频繁收到 Offer 的情况。任何一个 Framework 做决策的效率就会影响整体的效率。
 - 资源碎片。每个节点上的资源不可能全部被分配完，剩下的一点可能不足以让任何任务运行，这样便产生了类似于操作系统中的内存碎片问题。
 - Mesos 只适合调度短任务，Mesos 在设计之初就是为数据中心中的段任务而设计的。
@@ -159,7 +156,6 @@ CapExecutor 是 Mesos 的一个 customized executor，实现 pod-like 的逻辑�
 ![images](http://70data.net/upload/kubernetes/zL2ETd59vibKMLzkhg.webp)
 
 ![images](http://70data.net/upload/kubernetes/1gnZsIpKT3h9fOr9g.webp)
-
 
 缓存 offer。
 当 scheduler 从 Mesos 中获取 offer 时候，CapScheduler会把 offer 放入到 cache，offer 在 TTL 后，offer 会被 launch 或者归还给 Mesos。

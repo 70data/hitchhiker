@@ -1,11 +1,3 @@
-## 暂停容器
-
-会暂停容器中所有进程
-
-```shell script
-docker pause
-```
-
 ## Debug
 
 在 `/etc/docker/daemon.json` 中开启 debug。
