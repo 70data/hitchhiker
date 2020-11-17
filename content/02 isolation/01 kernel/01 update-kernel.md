@@ -55,6 +55,8 @@ yum install kernel-devel-5.4.65-200.el7.x86_64.rpm
 
 yum install kernel-headers-5.4.65-200.el7.x86_64.rpm
 
+yum install kernel-tools*
+
 yum install perf-5.4.65-200.el7.x86_64.rpm
 
 yum install python3-perf-5.4.65-200.el7.x86_64.rpm
