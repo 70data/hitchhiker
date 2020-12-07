@@ -51,5 +51,3 @@ API 的定义和实现都符合 HTTP REST 的格式，用户可以通过标准�
 2. 匹配 API 对象的版本号
 3. 匹配 API 对象的资源类型
 
-> 官方设计文档 https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/principles.md
-

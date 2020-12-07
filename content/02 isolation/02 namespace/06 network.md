@@ -553,7 +553,7 @@ Veth Pair 设备的特点是：它被创建出来后，总是以两张虚拟网�
 
 ## 使用 bridge 和 Veth 构建网络
 
-```
+```markdown
                            +------------------------+
                            |                        | iptables +----------+
                            |  br01 192.168.88.1/24  |          |          |
@@ -759,7 +759,7 @@ namespace 与外网互通。
 
 从 ns02 ping 外网地址。
 
-``shell script
+```shell script
 ip netns exec ns02 ping 114.114.114.114 -c 1
 PING 114.114.114.114 (114.114.114.114) 56(84) bytes of data.
 --- 114.114.114.114 ping statistics ---
@@ -816,7 +816,7 @@ num  target     prot opt source               destination
 1    MASQUERADE  all  --  192.168.88.0/24      0.0.0.0/0
 ```
 
-再次尝试 `ping 114.114.114.114`。
+再次尝试 `ping 114.114.114.114`
 
 ```shell script
 ip netns exec ns02 ping 114.114.114.114 -c 1
@@ -842,9 +842,9 @@ tcpdump: listening on br01, link-type EN10MB (Ethernet), capture size 262144 byt
 可以看到从 eth0 出去的数据包的 sourceIP 已经变成网卡 IP 了。
 br01 收到的包的 sourceIP 还是 ns02 的 192.168.88.12`
 
-清理环境。
+清理环境
 
-```bash
+```shell script
 ip netns del ns01
 ip netns del ns02
 ifconfig br01 down

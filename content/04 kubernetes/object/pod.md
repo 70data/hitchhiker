@@ -108,8 +108,6 @@ Init 容器的重启策略：
 - postStart 容器创建后立即执行，注意由于是异步执行，它无法保证一定在 ENTRYPOINT 之前运行。如果失败，容器会被杀死，并根据 RestartPolicy 决定是否重启。
 - preStop 容器终止前执行。如果失败，容器同样也会被杀死。
 
-## 优先级
-
 ## 启动流程
 
 ### 为 Pod 创建新的沙箱
@@ -125,7 +123,7 @@ Init 容器的重启策略：
 - 在 Pod 中它作为共享 Linux Namespace 的基础。
 - 启用 PID Namespace 共享，它为每个 Pod 提供 1 号进程，并收集 Pod 内的僵尸进程。
 
-#### Namespace 挂载
+##### Namespace 挂载
 
 使用主机的 IPC 命名空间 `spec.hostIPC: true`，默认为 false。
 
@@ -186,4 +184,33 @@ func (ds *dockerService) RunPodSandbox(ctx context.Context, r *runtimeapi.RunPod
 ### PostStart
 
 如果当前的容器包含 PostStart，钩子就会执行该回调
+
+## 优先级
+
+## hostAliases
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostaliases-pod
+spec:
+  restartPolicy: Never
+  hostAliases:
+  - ip: "127.0.0.1"
+    hostnames:
+    - "foo.local"
+    - "bar.local"
+  - ip: "10.1.2.3"
+    hostnames:
+    - "foo.remote"
+    - "bar.remote"
+  containers:
+  - name: cat-hosts
+    image: busybox
+    command:
+    - cat
+    args:
+    - "/etc/hosts"
+```
 

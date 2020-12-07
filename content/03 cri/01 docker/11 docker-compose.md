@@ -151,6 +151,7 @@ docker-compose up
 
 ```yaml
 version: "3"
+
 services:
 
    db:

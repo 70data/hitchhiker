@@ -123,7 +123,7 @@ DaemonSet 创建的 Pod 会自动加上对 node.alpha.kubernetes.io/unreachable 
 
 Critical Pod：
 
-- `annotation` 包括 `scheduler.alpha.kubernetes.io/critical-pod=''`
+- annotation 包括 `scheduler.alpha.kubernetes.io/critical-pod=''`
 - `tolerations` 包括 `[{"key":"CriticalAddonsOnly", "operator":"Exists"}]`
 - `priorityClass` 为 `system-cluster-critical` 或者 `system-node-critical`
 

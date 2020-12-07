@@ -5,6 +5,12 @@ PVC 是资源的使用者，根据业务服务的需求变化而变化，由 Kub
 
 ### 流程分析
 
+1. Pod 加载存储卷，请求 PVC
+2. PVC 根据存储类型，找到存储类 StorageClass
+3. Provisioner 根据 StorageClass 动态生成一个持久卷 PV
+4. 持久卷 PV 和 PVC 最终形成绑定关系
+5. 持久卷 PV 开始提供给 Pod 使用
+
 Volume 相关的模块主要在 controller-manager 和 Kubelet 里。Volume Plugins 在 controller-manager 和 Kubelet 中都注册了，每个 Plugin 为自己的存储后端实现了 `attach/detach` `mount/unmount` `provision` `recycle` `delete` 等一组标准操作。
 
 在 controller-manager 中有两个 Volume 相关的 controllers。

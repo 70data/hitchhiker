@@ -1,6 +1,6 @@
 ## 申请
 
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -62,9 +62,4 @@ device plugins 将设备数量上报给 kubelet，kubelet 将设备数量上报�
 
 - 扩展资源只支持整数资源，不能过度提交。
 - 设备不能在容器之间共享。
-
-## 参考资料
-
-- https://blog.csdn.net/weixin_42663840/article/details/81231013
-- https://github.com/kubernetes/community/blob/master/contributors/design-proposals/resource-management/device-plugin.md
 

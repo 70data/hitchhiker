@@ -496,13 +496,10 @@ import (
 )
 
 func main() {
-
 	router := gin.Default()
-
 	router.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "PONG")
 	})
-
 	router.Run(":8080")
 }
 ```
@@ -599,7 +596,7 @@ CMD [ "curl", "-s", "http://myip.ipip.net" ]
 
 ```shell script
 docker run myip
-当前 IP：61.148.226.66 来自：北京市 联通
+当前 IP 61.148.226.66 来自 北京市 联通
 ```
 
 可以直接把镜像当做命令使用了。
@@ -639,7 +636,7 @@ X-Cache: MISS from proxy-2_6
 Transfer-Encoding: chunked
 Via: 1.1 cache-2:80, 1.1 proxy-2_6:8006
 Connection: keep-alive
-当前 IP：61.148.226.66 来自：北京市 联通
+当前 IP 61.148.226.66 来自 北京市 联通
 ```
 
 因为当存在 `ENTRYPOINT` 后，`CMD` 的内容将会作为参数传给 `ENTRYPOINT`。

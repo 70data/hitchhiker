@@ -103,18 +103,18 @@ memory 子系统可以为进程组设定一个 memory 使用上限，一旦进�
 创建一个 cgroup。
 
 ```shell script
-# cd /sys/fs/cgroup/cpu/
+cd /sys/fs/cgroup/cpu/
 
-# mkdir js
+mkdir js
 ```
 
 cgroup 会自动个创建对应的控制文件，这些控制文件存储的值就是对相应的 cgroup 的控制信息。
 可以写控制文件来更改控制信息。
 
 ```shell script
-# cd js
+cd js
 
-# ls
+ls
 cgroup.clone_children  cpuacct.stat   cpuacct.usage_all     cpuacct.usage_percpu_sys   cpuacct.usage_sys   cpu.cfs_period_us  cpu.shares  notify_on_release
 cgroup.procs           cpuacct.usage  cpuacct.usage_percpu  cpuacct.usage_percpu_user  cpuacct.usage_user  cpu.cfs_quota_us   cpu.stat    tasks
 ```

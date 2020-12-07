@@ -51,7 +51,3 @@ PID namespace 最多可以嵌套 32 层，由内核中的宏 `MAX_PID_NS_LEVEL` 
 这个进程具有特殊意义，当 init 进程退出时，系统也将退出。除了在 init 进程里指定了 handler 的信号外，内核会帮 init 进程屏蔽掉其他任何信号，这样可以防止其他进程不小心 kill 掉 init 进程导致系统挂掉。
 可以通过在父 PID namespace 中发送 `SIGKILL` 或者 `SIGSTOP` 信号来终止子 PID namespace 中的 PID 为 1 的进程。由于 PID 为 1 的进程的特殊性，当这个进程停止后，内核将会给这个 PID namespace 里的所有其他进程发送 `SIGKILL` 信号，使其他所有进程都停止，最终 PID namespace 被销毁掉。当一个进程的父进程退出后，该进程就变成了孤儿进程。孤儿进程会被当前 PID namespace 中 PID 为 1 的进程接管，而不是被最外层的系统级别的 init 进程接管。
 
-## 进程间通信
-
-https://kubernetes.io/zh/docs/tasks/configure-pod-container/share-process-namespace/
-

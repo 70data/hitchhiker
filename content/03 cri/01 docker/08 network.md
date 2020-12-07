@@ -67,6 +67,9 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 ![image](https://70data.oss-cn-beijing.aliyuncs.com/note/20201107211900.png)
 
+容器的 eth0 -> veth0 -> docker0 bringe -> host eth0，最后在 iptables 这里会有一次 SNAT。
+从 eth0 出去的流量中源地址是做 SNAT 源地址转换，从 Docker 容器访问外网的流量，在外部看来就是从宿主机上发出的，外部感觉不到 Docker 容器的存在。
+
 ### 别的 Host 上的容器怎么访问该容器
 
 - NAT 端口映射。容器里面直接用指定 IP + Port 访问目标容器。
@@ -260,10 +263,15 @@ vethb6b65f4: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         TX packets 4286  bytes 12042353 (11.4 MiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
+brctl show
 bridge name    bridge id            STP enabled    interfaces
 docker0        8000.02422e7aea6b    no             vetha567eb1
                                                    vethb6b65f4
 ```
+
+![image](https://70data.oss-cn-beijing.aliyuncs.com/note/20201206220541.png)
+
+![image](https://70data.oss-cn-beijing.aliyuncs.com/note/20201206220824.png)
 
 ## Host
 

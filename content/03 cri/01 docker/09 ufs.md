@@ -65,7 +65,7 @@ OverlayFS 将单个 Linux 主机上的两个目录合并成一个目录。
 
 OverlayFS 底层目录称为 lower，高层目录称为 upper，合并统一视图称为 merged。
 
-```
+```markdown
                    ├───────────────────────────────────│
   Container Mount  │ FILE 1 │ FILE 2 │ FILE 3 │ FILE 4 │       "merged"
                    ├────↑────────↑────────↑───────↑────│

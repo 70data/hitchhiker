@@ -21,3 +21,7 @@ kube-controller-manager：
 - Volume Controller
 - Resource quota Controller
 
+`--kube-api-qps` 和 `--kube-api-burst` 参数的值越大，kube-apiserver 和 etcd 的负载就越高。
+`--kube-api-qps`，默认值 20，与 kube-apiserver 通信时每秒请求数(QPS)限制。
+`--kube-api-burst`，默认值 30，与 kube-apiserve 通信时突发峰值请求个数上限。
+

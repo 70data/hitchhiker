@@ -18,7 +18,7 @@ Minikube 是一个运行在 Linux、macOS、Windows 的本地 Kubernetes 集群�
 
 ## 使用
 
-下载 Minikube。
+下载 Minikube
 https://github.com/kubernetes/minikube/releases
 
 ```shell script
