@@ -3,4 +3,3 @@ WORKDIR /opt
 COPY app .
 RUN chmod +x /opt/app
 CMD [ "app" ]
-

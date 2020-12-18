@@ -9,4 +9,3 @@ WORKDIR /opt
 COPY --from=builder /opt/app .
 RUN chmod +x /opt/app
 CMD [ "app" ]
-

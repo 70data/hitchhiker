@@ -18,7 +18,7 @@ func main() {
 	// 运行 stress 进程测试内存占用
 	if os.Args[0] == "/proc/self/exe" {
 		// 挂载容器内的 /proc 的文件系统
-		//Mount /proc to new root's  proc directory using MNT namespace
+		// Mount /proc to new root's  proc directory using MNT namespace
 		if err := syscall.Mount("proc", "/proc", "proc", uintptr(syscall.MS_NOEXEC|syscall.MS_NOSUID|syscall.MS_NODEV), ""); err != nil {
 			fmt.Println("Proc mount failed,Error : ", err)
 		}
@@ -29,7 +29,7 @@ func main() {
 			cmd.Stdin = os.Stdin
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
-			cmd.Run()
+			_ = cmd.Run()
 			os.Exit(1)
 		}()
 		// 运行 stress 进程
@@ -60,34 +60,34 @@ func main() {
 		os.Exit(1)
 	}
 	// 在挂载了 memory subsysyem 下创建限制内存的 cgroup
-	memory_limit_path := path.Join(cgroupMemoryHierarchyMount, "memorylimit")
-	if f, err := os.Stat(memory_limit_path); err == nil {
+	memoryLimitPath := path.Join(cgroupMemoryHierarchyMount, "memorylimit")
+	if f, err := os.Stat(memoryLimitPath); err == nil {
 		if !f.IsDir() {
-			if err = os.Mkdir(memory_limit_path, 0755); err != nil {
+			if err = os.Mkdir(memoryLimitPath, 0755); err != nil {
 				log.Fatal(err)
 			} else {
 				log.Printf("Mkdir memory cgroup %s \n", path.Join(cgroupMemoryHierarchyMount, "memorylimit"))
 			}
 		}
 	} else {
-		if err = os.Mkdir(memory_limit_path, 0755); err != nil {
+		if err = os.Mkdir(memoryLimitPath, 0755); err != nil {
 			log.Fatal(err)
 		} else {
 			log.Printf("Mkdir memory cgroup %s \n", path.Join(cgroupMemoryHierarchyMount, "memorylimit"))
 		}
 	}
 	// 限制 cgroup 内进程最大物理内存 limitMemory
-	if err := ioutil.WriteFile(path.Join(memory_limit_path, "memory.limit_in_bytes"), []byte(limitMemory), 0644); err != nil {
+	if err := ioutil.WriteFile(path.Join(memoryLimitPath, "memory.limit_in_bytes"), []byte(limitMemory), 0644); err != nil {
 		log.Fatal("Litmit memory error,", err)
 	} else {
 		log.Printf("Litmit memory %v sucessed\n", limitMemory)
 	}
 	log.Printf("Self process pid : %d \n", cmd.Process.Pid)
 	// 将进程加入到 cgroup 中
-	if err := ioutil.WriteFile(path.Join(memory_limit_path, "tasks"), []byte(strconv.Itoa(cmd.Process.Pid)), 0644); err != nil {
+	if err := ioutil.WriteFile(path.Join(memoryLimitPath, "tasks"), []byte(strconv.Itoa(cmd.Process.Pid)), 0644); err != nil {
 		log.Fatal("Move process to task error,", err)
 	} else {
 		log.Printf("Move process %d to task sucessed \n", cmd.Process.Pid)
 	}
-	cmd.Process.Wait()
+	_, _ = cmd.Process.Wait()
 }

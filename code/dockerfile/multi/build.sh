@@ -7,4 +7,3 @@ docker rm -f extract
 
 docker build --no-cache -t js/docker-multi-stage-demo:run . -f Dockerfile.run
 rm ./app-server
-

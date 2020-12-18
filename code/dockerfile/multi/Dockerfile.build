@@ -2,4 +2,3 @@ FROM golang:1.14-alpine
 WORKDIR $GOPATH/src/$CODEPATH
 COPY . .
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux GOPROXY=https://mirrors.aliyun.com/goproxy/ go build -o /opt/app app.go
-
