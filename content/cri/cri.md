@@ -1,6 +1,31 @@
+## 演进
+
+![images](http://70data.net/upload/kubernetes/Q4tbDwOGMVGxHg.webp)
+
+第一阶段。
+在 Kubernetes v1.5 之前，kubelet 内置了 Docker 和 rkt 的支持，并且通过 CNI 网络插件给它们配置容器网络。
+用户如果需要自定义运行时的功能是比较痛苦的，需要修改 kubelet 的代码，维护和升级都非常麻烦。
+
+第二阶段。
+从 v1.5 开始增加了 CRI 接口，通过容器运行时的抽象层消除了这些障碍，使得无需修改 kubelet 就可以支持运行多种容器运行时。
+CRI 接口包括了一组 Protocol Buffer、gRPC API 、用于 streaming 接口的库以及用于调试和验证的一系列工具等。
+内置的 Docker 实现也逐步迁移到了 CRI 的接口下。
+
+第三阶段。
+从 v1.11 开始，Kubelet 内置的 rkt 代码删除，CNI 的实现迁移到 docker-shim 之内。
+
+![images](http://70data.net/upload/kubernetes/m1C3a8QvNTdibBHg.webp)
+
+## CRI 接口
+
 CRI 描述了，对于 kubernetes 来说，一个 container 应该有哪些操作，每个操作有哪些参数。
 
 ![images](http://70data.net/upload/kubernetes/640-4.png)
+
+CRI 接口包括 RuntimeService 和 ImageService 两个服务。
+这两个服务可以在一个 gRPC server 中实现，也可以分开成两个独立服务。
+
+![images](http://70data.net/upload/kubernetes/TLsA6HibU3k6Mtew.webp)
 
 ## runc
 
@@ -46,29 +71,4 @@ podman 是一个构建在这个库之上的命令行管理工具。作为一个�
 守护进程作为容器管理器的问题是，它们大多数时候必须使用 root 权限运行。
 尽管由于守护进程的整体性，系统中没有 root 权限也可以完成其 90% 的功能，但是剩下的 10% 需要以 root 启动守护进程。
 使用 podman，最终有可能使 Linux 用户的 Namespace 拥有无根（rootless）容器。
-
-## 演进
-
-![images](http://70data.net/upload/kubernetes/Q4tbDwOGMVGxHg.webp)
-
-第一阶段。
-在 Kubernetes v1.5 之前，kubelet 内置了 Docker 和 rkt 的支持，并且通过 CNI 网络插件给它们配置容器网络。
-用户如果需要自定义运行时的功能是比较痛苦的，需要修改 kubelet 的代码，维护和升级都非常麻烦。
-
-第二阶段。
-从 v1.5 开始增加了 CRI 接口，通过容器运行时的抽象层消除了这些障碍，使得无需修改 kubelet 就可以支持运行多种容器运行时。
-CRI 接口包括了一组 Protocol Buffer、gRPC API 、用于 streaming 接口的库以及用于调试和验证的一系列工具等。
-内置的 Docker 实现也逐步迁移到了 CRI 的接口下。
-
-第三阶段。
-从 v1.11 开始，Kubelet 内置的 rkt 代码删除，CNI 的实现迁移到 docker-shim 之内。
-
-![images](http://70data.net/upload/kubernetes/m1C3a8QvNTdibBHg.webp)
-
-## CRI 接口
-
-CRI 接口包括 RuntimeService 和 ImageService 两个服务。
-这两个服务可以在一个 gRPC server 中实现，也可以分开成两个独立服务。
-
-![images](http://70data.net/upload/kubernetes/TLsA6HibU3k6Mtew.webp)
 
